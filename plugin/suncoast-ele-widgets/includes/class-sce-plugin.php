@@ -50,9 +50,11 @@ final class SCE_Plugin {
 	public function register_widgets( $widgets_manager ) {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-header.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-banner.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-benefits.php';
 
 		$widgets_manager->register( new SCE_Widget_Header() );
 		$widgets_manager->register( new SCE_Widget_Banner() );
+		$widgets_manager->register( new SCE_Widget_Benefits() );
 	}
 
 	/**

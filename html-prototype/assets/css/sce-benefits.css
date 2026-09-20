@@ -1,0 +1,454 @@
+/* ==========================================================================
+   Suncoast — Benefits + Video widget
+   Figma (measured 1:1 from the section export, bg #FCFBF4):
+     container 1070 · cards 340.67 wide, gap 24, media 284 tall, radius 16
+     eyebrow   Poppins 400 12/15  ls 2.6  #EBB04D uppercase
+     heading   Playfair 600 36    ls 0    #1A1C1C, accent #EBB04D (upright)
+     sub       Poppins 400 16/25.6        #444748
+     card name Inter 700 20/28.8          #1A1C1C   icon 22px #EBB04D
+     card desc Inter 400 14/22.4          #444748
+     video     1070x400 r16, photo + #1A1C1C @50%
+               eyebrow Poppins 400 10/15 ls 2.6 #EBB04D
+               play    ⌀58 #EBB04D
+               title   Playfair 600 32/48 #FFFFFF
+               note    Poppins 400 9/13.5 ls .9 #FFFFFF @80%
+
+   NOTE ON THE HEADING LINE-HEIGHT
+     Figma records 24px against a 36px face. That is a designer slip — it
+     would overlap the moment the heading wraps on a phone. We use 1.2 and
+     absorb the difference in the surrounding margins, so the single-line
+     desktop rendering is pixel-identical and mobile wrapping is correct.
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-ben {
+	--sce-ben-bg: #FCFBF4;
+	--sce-ben-max: 1070px;
+	--sce-ben-pad-top: 76px;
+	--sce-ben-pad-bottom: 105px;
+
+	--sce-ben-eyebrow-mb: 9px;
+	--sce-ben-title-mb: 17px;
+	--sce-ben-head-mb: 41px;
+
+	--sce-ben-gap: 24px;
+	--sce-ben-radius: 16px;
+	--sce-ben-media-ratio: 340.67 / 283.98;
+	--sce-ben-name-mt: 25px;
+	--sce-ben-desc-mt: 9px;
+	--sce-ben-icon: 22px;
+	--sce-ben-icon-gap: 10px;
+
+	--sce-ben-video-mt: 46px;
+	--sce-ben-video-ratio: 1070 / 400;
+	--sce-ben-video-overlay: rgba(26, 28, 28, 0.5);
+	--sce-ben-video-gap: 18px;
+	--sce-ben-play: 58px;
+	--sce-ben-play-bg: var(--sce-gold);
+	--sce-ben-play-bg-hover: var(--sce-gold-hi);
+
+	--sce-ben-ink: var(--sce-ink-2);
+	--sce-ben-muted: #444748;
+}
+
+.sce-scope.sce-ben {
+	position: relative;
+	background-color: var(--sce-ben-bg);
+	padding-block: var(--sce-ben-pad-top) var(--sce-ben-pad-bottom);
+}
+
+.sce-scope .sce-ben__inner {
+	width: 100%;
+	max-width: calc(var(--sce-ben-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Heading block
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-ben__head {
+	margin-bottom: var(--sce-ben-head-mb);
+	text-align: center;
+}
+
+.sce-scope .sce-ben__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-ben-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-ben__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-ben-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: 36px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0;
+	color: var(--sce-ben-ink);
+}
+/* The accent here is a colour change only — unlike the hero, it is upright. */
+.sce-scope .sce-ben__title em {
+	font-style: normal;
+	font-weight: inherit;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-ben__title--italic em { font-style: italic; }
+
+.sce-scope .sce-ben__sub {
+	margin-inline: auto;
+	font-family: var(--sce-font-ui);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sce-ben-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-ben__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--sce-ben-gap);
+	align-items: start;
+}
+
+.sce-scope .sce-ben__card { min-width: 0; }
+
+.sce-scope .sce-ben__media {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: var(--sce-ben-media-ratio);
+	border-radius: var(--sce-ben-radius);
+	background-color: #EEEEEE;
+}
+.sce-scope .sce-ben__media img {
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+	object-position: center;
+	transition: transform 0.9s var(--sce-ease-expo);
+}
+.sce-scope .sce-ben__card:hover .sce-ben__media img { transform: scale(1.045); }
+
+.sce-scope .sce-ben__row {
+	display: flex;
+	align-items: center;
+	gap: var(--sce-ben-icon-gap);
+	margin-top: var(--sce-ben-name-mt);
+}
+
+.sce-scope .sce-ben__icon {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--sce-ben-icon);
+	height: var(--sce-ben-icon);
+	color: var(--sce-gold);
+	transition: transform 0.55s var(--sce-ease-spring);
+}
+.sce-scope .sce-ben__icon svg,
+.sce-scope .sce-ben__icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+/* Inline SVGs recolour from the icon colour; uploaded SVG/PNG keeps its own. */
+.sce-scope .sce-ben__icon svg [fill]:not([fill="none"]) { fill: currentColor; }
+.sce-scope .sce-ben__card:hover .sce-ben__icon { transform: scale(1.12) rotate(-6deg); }
+
+.sce-scope .sce-ben__name {
+	font-family: var(--sce-font-body);
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.44;
+	letter-spacing: 0;
+	color: var(--sce-ben-ink);
+}
+
+.sce-scope .sce-ben__desc {
+	margin-top: var(--sce-ben-desc-mt);
+	font-family: var(--sce-font-body);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sce-ben-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Video teaser
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-ben__video {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: var(--sce-ben-video-mt);
+	aspect-ratio: var(--sce-ben-video-ratio);
+	border-radius: var(--sce-ben-radius);
+	background-color: #1A1C1C;
+}
+.sce-scope .sce-ben__video-img {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+	object-position: center;
+	transform: scale(1.04);
+	transition: transform 1.2s var(--sce-ease-expo);
+}
+.sce-scope .sce-ben__video:hover .sce-ben__video-img { transform: scale(1); }
+.sce-scope .sce-ben__video-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-color: var(--sce-ben-video-overlay);
+}
+
+.sce-scope .sce-ben__video-inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--sce-ben-video-gap);
+	padding-inline: 24px;
+	text-align: center;
+}
+
+.sce-scope .sce-ben__video-eyebrow {
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-ben__play {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--sce-ben-play);
+	height: var(--sce-ben-play);
+	border-radius: 50%;
+	background-color: var(--sce-ben-play-bg);
+	color: #fff;
+	transition:
+		transform 0.42s var(--sce-ease-spring),
+		background-color 0.32s var(--sce-ease),
+		box-shadow 0.42s var(--sce-ease);
+}
+.sce-scope .sce-ben__play svg {
+	width: 40%;
+	height: 40%;
+	/* optical centring: a triangle's visual centre sits left of its box centre */
+	margin-left: 8%;
+}
+/* Pulsing halo — pure transform/opacity, and it stops for reduced motion. */
+.sce-scope .sce-ben__play::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background-color: var(--sce-ben-play-bg);
+	opacity: 0.55;
+	z-index: -1;
+	animation: sce-ben-pulse 2.6s var(--sce-ease-expo) infinite;
+}
+.sce-scope .sce-ben__play:hover,
+.sce-scope .sce-ben__play:focus-visible {
+	background-color: var(--sce-ben-play-bg-hover);
+	transform: scale(1.08);
+	box-shadow: 0 12px 30px -10px rgba(199, 140, 40, 0.75);
+}
+.sce-scope .sce-ben__play:active { transform: scale(0.98); }
+
+@keyframes sce-ben-pulse {
+	0%   { transform: scale(1);    opacity: 0.5; }
+	70%  { transform: scale(1.75); opacity: 0; }
+	100% { transform: scale(1.75); opacity: 0; }
+}
+
+.sce-scope .sce-ben__video-title {
+	max-width: 520px;
+	font-family: var(--sce-font-display);
+	font-size: 32px;
+	font-weight: 600;
+	line-height: 1.5;
+	letter-spacing: 0;
+	color: var(--sce-white);
+}
+
+.sce-scope .sce-ben__video-note {
+	font-family: var(--sce-font-ui);
+	font-size: 9px;
+	font-weight: 400;
+	line-height: 13.5px;
+	letter-spacing: 0.9px;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   Video modal
+   sce-benefits.js moves this node to <body> on init, so it is styled from
+   its own class rather than through a `.sce-ben` ancestor.
+   -------------------------------------------------------------------------- */
+.sce-scope.sce-modal,
+.sce-modal.sce-scope {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(16px, 4vw, 48px);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.34s var(--sce-ease), visibility 0s linear 0.34s;
+}
+.sce-modal.is-open {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.34s var(--sce-ease), visibility 0s;
+}
+
+.sce-scope .sce-modal__scrim {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(10, 9, 6, 0.82);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+}
+
+.sce-scope .sce-modal__box {
+	position: relative;
+	width: 100%;
+	max-width: min(1120px, 100%);
+	transform: translate3d(0, 16px, 0) scale(0.985);
+	transition: transform 0.44s var(--sce-ease-expo);
+}
+.sce-modal.is-open .sce-modal__box { transform: none; }
+
+.sce-scope .sce-modal__frame {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 16 / 9;
+	border-radius: 12px;
+	background-color: #000;
+	box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
+}
+.sce-scope .sce-modal__frame iframe,
+.sce-scope .sce-modal__frame video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	border: 0;
+	display: block;
+	background: #000;
+}
+
+.sce-scope .sce-modal__close {
+	position: absolute;
+	top: -46px;
+	right: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.12);
+	color: #fff;
+	transition: background-color 0.28s var(--sce-ease), transform 0.4s var(--sce-ease-spring);
+}
+.sce-scope .sce-modal__close:hover {
+	background-color: rgba(255, 255, 255, 0.24);
+	transform: rotate(90deg);
+}
+.sce-scope .sce-modal__close svg { width: 14px; height: 14px; }
+.sce-scope .sce-modal__close svg line { stroke: currentColor; stroke-width: 2; }
+
+@media (max-width: 600px) {
+	.sce-scope .sce-modal__close { top: -42px; width: 34px; height: 34px; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-ben { --sce-shell-pad: 40px; }
+}
+
+/* Three narrow columns stop reading before the tablet breakpoint, so the
+   grid goes to one column and the media takes a wider crop instead. */
+@media (max-width: 991px) {
+	.sce-ben {
+		--sce-shell-pad: 32px;
+		--sce-ben-pad-top: 64px;
+		--sce-ben-pad-bottom: 72px;
+		--sce-ben-gap: 32px;
+		--sce-ben-media-ratio: 16 / 9;
+		--sce-ben-video-ratio: 16 / 9;
+		--sce-ben-head-mb: 36px;
+		--sce-ben-video-mt: 36px;
+	}
+	.sce-scope .sce-ben__grid { grid-template-columns: minmax(0, 1fr); }
+	.sce-scope .sce-ben__card { max-width: 620px; margin-inline: auto; width: 100%; }
+	.sce-scope .sce-ben__title { font-size: 32px; }
+	.sce-scope .sce-ben__video-title { font-size: 28px; }
+}
+
+@media (max-width: 767px) {
+	.sce-ben {
+		--sce-shell-pad: 24px;
+		--sce-ben-pad-top: 56px;
+		--sce-ben-pad-bottom: 60px;
+		--sce-ben-video-ratio: 16 / 10;
+		--sce-ben-video-gap: 14px;
+		--sce-ben-play: 52px;
+		--sce-ben-name-mt: 20px;
+	}
+	.sce-scope .sce-ben__title { font-size: 28px; }
+	.sce-scope .sce-ben__sub { font-size: 15px; }
+	.sce-scope .sce-ben__video-title { font-size: 24px; line-height: 1.4; }
+}
+
+@media (max-width: 480px) {
+	.sce-ben {
+		--sce-shell-pad: 20px;
+		--sce-ben-media-ratio: 4 / 3;
+		--sce-ben-video-ratio: 1 / 1;
+		--sce-ben-play: 48px;
+		--sce-ben-eyebrow-mb: 8px;
+	}
+	.sce-scope .sce-ben__eyebrow { font-size: 11px; letter-spacing: 2px; }
+	.sce-scope .sce-ben__title { font-size: 24px; }
+	.sce-scope .sce-ben__name { font-size: 18px; }
+	.sce-scope .sce-ben__video-title { font-size: 21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope .sce-ben__play::before { animation: none; opacity: 0; }
+}

@@ -7,6 +7,7 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 |---|---|
 | **Suncoast Header** | Sticky blurred navbar — logo, scroll-spy nav, phone, CTA, mobile panel |
 | **Suncoast Hero Banner** | Hero photo + content column + lead form card + marquee strip |
+| **Suncoast Benefits + Video** | Centred heading, three-up benefit grid, video teaser with a popup player |
 
 ---
 
@@ -30,9 +31,12 @@ Rebuild the zip after any source change:
 1. Drop **Suncoast Header** into a section at the very top. Give that section
    `0` padding so the 81px bar is the only thing setting the height.
 2. Drop **Suncoast Hero Banner** into the next, full-width section (also `0` padding).
-3. Give each downstream section a **CSS ID** (`products`, `projects`, `process`,
-   `pricing`) matching the header's menu links. Scroll-spy and smooth scrolling
-   pick them up automatically.
+3. Drop **Suncoast Benefits + Video** into the section after that — full width,
+   `0` padding, since the widget paints its own `#FCFBF4` background and holds
+   its own 1070px content column.
+4. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
+   matching the header's menu links. Scroll-spy and smooth scrolling pick them
+   up automatically.
 
 ---
 
@@ -47,6 +51,7 @@ plugin/suncoast-ele-widgets/     the WordPress plugin (this is what ships)
     class-sce-forms.php          AJAX endpoint, spam traps, lead CPT, e-mail
     widgets/class-sce-widget-header.php
     widgets/class-sce-widget-banner.php
+    widgets/class-sce-widget-benefits.php
   assets/css|js/                 the hard-scoped CSS + vanilla JS
   templates/email-admin.php      admin notification e-mail
 
@@ -126,6 +131,29 @@ Measured in-browser at a 1440px viewport:
 | Submit               | Inter 700 12, ls .96, #0F0F0F | identical ✅ |
 | Marquee              | y802, 53 tall, #F7DEB4, Poppins 500 18, ls −4%, #5A421B | identical ✅ |
 
+### Benefits + Video
+
+The section export is 1:1, so it was scanned pixel-by-pixel for ink bands and
+the build re-measured against them. **Every element lands within 0.4px.**
+
+| Element        | Figma | Built | Δ |
+|----------------|-------|-------|---|
+| Section height | 1192  | 1191.7 | −0.3 |
+| Sub-heading    | 75.7  | 76.0   | +0.3 |
+| Heading        | 99.8  | 100.0  | +0.2 |
+| Short info     | 159.8 | 160.2  | +0.4 |
+| Card image top | 227   | 226.8  | −0.2 |
+| Card image h   | 284   | 284.0  | 0 |
+| Icon + heading | 535.6 | 535.7  | +0.1 |
+| Description    | 573.9 | 573.5  | −0.4 |
+| Video top      | 687   | 686.7  | −0.3 |
+| Video height   | 400   | 400.0  | 0 |
+
+Cards measure 340.67 wide with 24px gaps (1070 total), radius 16, background
+`#FCFBF4`, overlay `#1A1C1C` at 50%, play button ⌀58 — all derived from the
+export rather than eyeballed. The overlay alpha was solved by least-squares
+against the original poster image.
+
 Also verified: no horizontal overflow at 1440 / 768 / 375, no console errors,
 all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
 
@@ -157,8 +185,21 @@ all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
   validation that only paints red after a submit attempt and focuses the first
   bad field.
 
+**Benefits + Video**
+- Heading uses the same masked line reveal; cards and the video stagger in.
+- Video opens an accessible modal: focus trap both directions, Escape, scrim
+  click, iOS-safe scroll lock, focus returned to the play button, `inert` while
+  closed.
+- **The embed is built on open and destroyed on close** — nothing streams until
+  the visitor asks, and closing actually stops the audio.
+- YouTube (privacy mode by default), Vimeo, self-hosted, or any embed URL.
+- The modal is moved to `<body>` on init for the same transformed-ancestor
+  reason as the header, so its two style controls are written inline.
+- Grid is 3-up above 992px and single-column below, with the image crop moving
+  340/284 → 16/9 → 4/3 so it never becomes a tower on a phone.
+
 **Performance**
-- No libraries. Two small vanilla modules, deferred.
+- No libraries. Three small vanilla modules, deferred.
 - Assets are registered, never globally enqueued — a page using neither widget
   downloads none of this. Three font families, only the weights in use.
 - Scroll/resize handlers are rAF-throttled and passive; animation is
@@ -224,3 +265,12 @@ add_action( 'sce/lead_submitted', function ( $lead_id, $fields, $meta ) { /* CRM
    bar). *Behaviour → Overlay the next section* flips it.
 6. **Hero image.** `1.-Hero-Section.png` is 1280×830 and upscales slightly into a
    1440-wide stage. A ~2560px export would sharpen it on retina.
+7. **Benefits heading line-height.** Figma records 24px against a 36px Playfair
+   face — that would overlap the moment the heading wraps on a phone. The build
+   uses 1.2 and absorbs the difference in the surrounding margins, so the
+   single-line desktop rendering is pixel-identical and wrapping is correct.
+8. **Benefit icons are inlined** from the three supplied SVGs, so they recolour
+   with the icon control and cost no extra request. Pick *Custom* on a card to
+   use an uploaded image instead.
+9. **Video block has no video yet.** The prototype points at a placeholder
+   YouTube ID; set the real one under *Video teaser → Video*.

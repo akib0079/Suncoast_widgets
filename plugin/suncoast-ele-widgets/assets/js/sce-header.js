@@ -92,15 +92,19 @@
 		}
 	}
 
-	/* --------------------------------------------------------- scroll lock */
-	var lockY = 0;
-	var lockCount = 0;
+	/* --------------------------------------------------------- scroll lock
+	   Shared with sce-benefits.js through a single counter on `window`, so the
+	   mobile menu and the video modal can never unlock each other's scroll. */
+	function store() {
+		return w.__sceScrollLock || (w.__sceScrollLock = { n: 0, y: 0 });
+	}
 	function lockScroll() {
-		if (lockCount++ > 0) return;
-		lockY = w.scrollY || w.pageYOffset || 0;
+		var s = store();
+		if (s.n++ > 0) return;
+		s.y = w.scrollY || w.pageYOffset || 0;
 		var sbw = w.innerWidth - d.documentElement.clientWidth;
 		d.body.style.position = "fixed";
-		d.body.style.top = -lockY + "px";
+		d.body.style.top = -s.y + "px";
 		d.body.style.left = "0";
 		d.body.style.right = "0";
 		d.body.style.width = "100%";
@@ -108,8 +112,9 @@
 		if (sbw > 0) d.body.style.paddingRight = sbw + "px";
 	}
 	function unlockScroll() {
-		if (--lockCount > 0) return;
-		lockCount = 0;
+		var s = store();
+		if (--s.n > 0) return;
+		s.n = 0;
 		var prev = d.documentElement.style.scrollBehavior;
 		d.documentElement.style.scrollBehavior = "auto";
 		d.body.style.position = "";
@@ -119,7 +124,7 @@
 		d.body.style.width = "";
 		d.body.style.overflow = "";
 		d.body.style.paddingRight = "";
-		w.scrollTo(0, lockY);
+		w.scrollTo(0, s.y);
 		d.documentElement.style.scrollBehavior = prev;
 	}
 

@@ -59,11 +59,13 @@ final class SCE_Assets {
 
 		wp_register_style( 'sce-header', $css . 'sce-header.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-banner', $css . 'sce-banner.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-benefits', $css . 'sce-benefits.css', $base, SCE_VERSION );
 		// Maps Elementor Pro's form markup onto the Figma card design.
 		wp_register_style( 'sce-form-elementor', $css . 'sce-form-elementor.css', array( 'sce-banner' ), SCE_VERSION );
 
 		wp_register_script( 'sce-header', $js . 'sce-header.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-banner', $js . 'sce-banner.js', array(), SCE_VERSION, true );
+		wp_register_script( 'sce-benefits', $js . 'sce-benefits.js', array(), SCE_VERSION, true );
 
 		wp_localize_script(
 			'sce-banner',
@@ -79,13 +81,13 @@ final class SCE_Assets {
 	/**
 	 * Only three families, only the weights the design actually uses.
 	 *
-	 * Poppins 400/500/600 · Inter 400/500/600/700 · Playfair Display 400 + 400i
+	 * Poppins 400/500/600 · Inter 400/500/600/700 · Playfair Display 400/600 + 400i
 	 */
 	public function fonts_url() {
 		return add_query_arg(
 			array(
 				'family'  => rawurlencode( 'Inter:wght@400;500;600;700' )
-					. '&family=' . rawurlencode( 'Playfair Display:ital,wght@0,400;1,400' )
+					. '&family=' . rawurlencode( 'Playfair Display:ital,wght@0,400;0,600;1,400' )
 					. '&family=' . rawurlencode( 'Poppins:wght@400;500;600' ),
 				'display' => 'swap',
 			),
