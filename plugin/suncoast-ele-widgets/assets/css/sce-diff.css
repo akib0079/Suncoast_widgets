@@ -1,0 +1,214 @@
+/* ==========================================================================
+   Suncoast — The Suncoast Difference widget (dark compare band)
+   Figma (measured 1:1 from the export; band fill #1A1A1A):
+
+     container 1072, padding 47 top / 47 bottom (band renders ~307 tall)
+     columns   432 / 286 / 286 with 34px gaps  — heading block, then two
+               feature columns
+     eyebrow   Poppins 400 10/15 ls 2.6 #EBB04D uppercase        (mb 9)
+     heading   Playfair 400 32/50 #FFFFFF + Playfair *italic* #EBB04D accent
+     button    131 x 50, radius 10, #EEB75D, padding 15/20, black label
+     label     Poppins 700 11/16.5 ls 1.1 #EBB04D                (row pitch 85)
+     desc      Poppins 400 13/19.5 #E5E5E5                       (8px below)
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-diff {
+	--sce-diff-bg: #1A1A1A;
+	--sce-diff-max: 1072px;
+	--sce-diff-pad-top: 47px;
+	--sce-diff-pad-bottom: 47px;
+
+	--sce-diff-cols: 432fr 286fr 286fr;
+	--sce-diff-gap: 34px;
+
+	--sce-diff-eyebrow-mb: 9px;
+	--sce-diff-title-mb: 17px;
+
+	--sce-diff-row-gap: 41px;
+	--sce-diff-label-gap: 8px;
+
+	--sce-diff-btn-bg: #EEB75D;
+	--sce-diff-btn-bg-hover: #F5C878;
+	--sce-diff-btn-ink: #000000;
+	--sce-diff-btn-radius: 10px;
+	--sce-diff-btn-h: 50px;
+
+	--sce-diff-ink: var(--sce-white);
+	--sce-diff-muted: #E5E5E5;
+}
+
+.sce-scope.sce-diff {
+	position: relative;
+	background-color: var(--sce-diff-bg);
+	padding-block: var(--sce-diff-pad-top) var(--sce-diff-pad-bottom);
+}
+
+.sce-scope .sce-diff__inner {
+	width: 100%;
+	max-width: calc(var(--sce-diff-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+.sce-scope .sce-diff__grid {
+	display: grid;
+	grid-template-columns: var(--sce-diff-cols);
+	gap: var(--sce-diff-gap);
+	align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   Column 1 — heading + button
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-diff__lead { min-width: 0; }
+
+.sce-scope .sce-diff__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-diff-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-diff__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-diff-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: 32px;
+	font-weight: 400;
+	line-height: 50px;
+	letter-spacing: 0;
+	color: var(--sce-diff-ink);
+}
+.sce-scope .sce-diff__title em {
+	font-style: italic;
+	font-weight: 400;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-diff__title--upright em { font-style: normal; }
+
+.sce-scope .sce-diff__btn {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	min-height: var(--sce-diff-btn-h);
+	padding: 15px 20px;
+	border-radius: var(--sce-diff-btn-radius);
+	background-color: var(--sce-diff-btn-bg);
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--sce-diff-btn-ink);
+	transition:
+		transform 0.4s var(--sce-ease-expo),
+		box-shadow 0.4s var(--sce-ease),
+		background-color 0.4s var(--sce-ease);
+}
+.sce-scope .sce-diff__btn::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.55) 48%, transparent 64%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+	pointer-events: none;
+}
+.sce-scope .sce-diff__btn:hover,
+.sce-scope .sce-diff__btn:focus-visible {
+	background-color: var(--sce-diff-btn-bg-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 12px 26px -10px rgba(199, 140, 40, 0.6);
+}
+.sce-scope .sce-diff__btn:hover::after,
+.sce-scope .sce-diff__btn:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-diff__btn:active { transform: translateY(0); }
+.sce-scope .sce-diff__btn svg { width: 12px; height: 12px; }
+
+/* --------------------------------------------------------------------------
+   Columns 2 + 3 — feature list
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-diff__col {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sce-diff-row-gap);
+	min-width: 0;
+}
+
+.sce-scope .sce-diff__item { min-width: 0; }
+
+.sce-scope .sce-diff__label {
+	display: block;
+	margin-bottom: var(--sce-diff-label-gap);
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+	transition: color 0.4s var(--sce-ease);
+}
+
+.sce-scope .sce-diff__text {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	color: var(--sce-diff-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-diff { --sce-shell-pad: 40px; --sce-diff-gap: 28px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-diff {
+		--sce-shell-pad: 32px;
+		--sce-diff-cols: minmax(0, 1fr) minmax(0, 1fr);
+		--sce-diff-gap: 32px;
+		--sce-diff-pad-top: 64px;
+		--sce-diff-pad-bottom: 64px;
+		--sce-diff-row-gap: 32px;
+	}
+	/* the heading block spans the full width above the two feature columns */
+	.sce-scope .sce-diff__lead { grid-column: 1 / -1; margin-bottom: 8px; }
+	.sce-scope .sce-diff__title { font-size: 28px; line-height: 1.4; }
+}
+
+@media (max-width: 600px) {
+	.sce-diff {
+		--sce-shell-pad: 24px;
+		--sce-diff-cols: minmax(0, 1fr);
+		--sce-diff-gap: 28px;
+		--sce-diff-pad-top: 56px;
+		--sce-diff-pad-bottom: 56px;
+		--sce-diff-row-gap: 26px;
+	}
+	.sce-scope .sce-diff__title { font-size: 25px; }
+	.sce-scope .sce-diff__btn { width: 100%; }
+}
+
+@media (max-width: 400px) {
+	.sce-diff { --sce-shell-pad: 20px; }
+	.sce-scope .sce-diff__title { font-size: 22px; }
+}

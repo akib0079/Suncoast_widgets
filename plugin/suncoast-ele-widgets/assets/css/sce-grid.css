@@ -1,0 +1,244 @@
+/* ==========================================================================
+   Suncoast — Make It Yours widget (icon card grid)
+   Figma (measured 1:1 from the export; section background #FBF9F4):
+
+     container 1072, padding 111 / 119
+     eyebrow   Poppins 400 10/15 ls 2.6 #EBB04D uppercase
+     heading   Playfair 400 32 #1A1C1C + Playfair *italic* #EBB04D accent
+     sub       Poppins 400 16/25.6 #444748
+     grid      3 x 341.33, gap 24 across / 28 down, card 134 tall
+     card      radius 15, #FFFFFF, 1px #E5E5E5 @30% inside,
+               drop shadow 0 1 2 rgba(0,0,0,.05), padding 32
+     title     Poppins 700 11/16.5 ls 1.1 #1A1C1C
+     desc      Poppins 400 13/19.5 #444748   (4px below the title)
+
+   ICON SIZE
+     The design draws the glyphs at their natural ~17px, which reads small
+     against a 341px card. The default here is 26px and `--sce-my-icon` is a
+     control; each SVG keeps its own aspect ratio inside the square box via
+     preserveAspectRatio, so the six mismatched viewBoxes optically match.
+
+   NOTE ON THE HEADING LINE-HEIGHT
+     Figma records 24px against a 32px face — the same slip as the other
+     sections. We use 1.2 and absorb the difference in the eyebrow's margin,
+     which is why that margin is deliberately tiny.
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-my {
+	--sce-my-bg: #FBF9F4;
+	--sce-my-max: 1072px;
+	--sce-my-pad-top: 111px;
+	--sce-my-pad-bottom: 119px;
+
+	--sce-my-eyebrow-mb: 2px;
+	--sce-my-title-mb: 10px;
+	--sce-my-head-mb: 44px;
+
+	--sce-my-cols: 3;
+	--sce-my-gap-x: 24px;
+	--sce-my-gap-y: 28px;
+
+	--sce-my-card-bg: #FFFFFF;
+	--sce-my-card-radius: 15px;
+	--sce-my-card-border: rgba(229, 229, 229, 0.3);
+	--sce-my-card-border-hover: rgba(235, 176, 77, 0.55);
+	--sce-my-card-pad: 32px;
+	--sce-my-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	--sce-my-card-shadow-hover: 0 18px 38px -22px rgba(26, 26, 26, 0.28);
+
+	--sce-my-icon: 26px;
+	--sce-my-icon-mb: 12px;
+	--sce-my-icon-color: var(--sce-gold);
+	--sce-my-title-gap: 4px;
+
+	--sce-my-ink: var(--sce-ink-2);
+	--sce-my-muted: #444748;
+}
+
+.sce-scope.sce-my {
+	position: relative;
+	background-color: var(--sce-my-bg);
+	padding-block: var(--sce-my-pad-top) var(--sce-my-pad-bottom);
+}
+
+.sce-scope .sce-my__inner {
+	width: 100%;
+	max-width: calc(var(--sce-my-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Heading
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-my__head { margin-bottom: var(--sce-my-head-mb); }
+
+.sce-scope .sce-my__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-my-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-my__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-my-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: 32px;
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	color: var(--sce-my-ink);
+}
+.sce-scope .sce-my__title em {
+	font-style: italic;
+	font-weight: 400;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-my__title--upright em { font-style: normal; }
+
+.sce-scope .sce-my__sub {
+	font-family: var(--sce-font-ui);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sce-my-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-my__grid {
+	display: grid;
+	grid-template-columns: repeat(var(--sce-my-cols), minmax(0, 1fr));
+	gap: var(--sce-my-gap-y) var(--sce-my-gap-x);
+	align-items: stretch;
+}
+
+.sce-scope .sce-my__card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: var(--sce-my-card-pad);
+	border: 1px solid var(--sce-my-card-border);
+	border-radius: var(--sce-my-card-radius);
+	background-color: var(--sce-my-card-bg);
+	box-shadow: var(--sce-my-card-shadow);
+	transition:
+		transform 0.5s var(--sce-ease-expo),
+		box-shadow 0.5s var(--sce-ease),
+		border-color 0.5s var(--sce-ease);
+}
+/* A gold wash that blooms from behind the icon on hover — opacity only, so it
+   costs nothing to animate. */
+.sce-scope .sce-my__card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 180px;
+	height: 180px;
+	border-radius: inherit;
+	background: radial-gradient(circle at 14% 18%, rgba(235, 176, 77, 0.16), transparent 68%);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.55s var(--sce-ease);
+}
+.sce-scope .sce-my__card:hover,
+.sce-scope .sce-my__card:focus-within {
+	transform: translateY(-4px);
+	border-color: var(--sce-my-card-border-hover);
+	box-shadow: var(--sce-my-card-shadow-hover);
+}
+.sce-scope .sce-my__card:hover::before,
+.sce-scope .sce-my__card:focus-within::before { opacity: 1; }
+
+.sce-scope .sce-my__icon {
+	position: relative;
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--sce-my-icon);
+	height: var(--sce-my-icon);
+	margin-bottom: var(--sce-my-icon-mb);
+	color: var(--sce-my-icon-color);
+	transition: transform 0.55s var(--sce-ease-spring);
+}
+/* preserveAspectRatio keeps each of the six mismatched viewBoxes optically
+   even inside one square box. */
+.sce-scope .sce-my__icon svg,
+.sce-scope .sce-my__icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.sce-scope .sce-my__card:hover .sce-my__icon { transform: translateY(-2px) scale(1.08); }
+
+.sce-scope .sce-my__name {
+	position: relative;
+	margin-bottom: var(--sce-my-title-gap);
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	color: var(--sce-my-ink);
+}
+
+.sce-scope .sce-my__desc {
+	position: relative;
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	color: var(--sce-my-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-my { --sce-shell-pad: 40px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-my {
+		--sce-shell-pad: 32px;
+		--sce-my-cols: 2;
+		--sce-my-pad-top: 72px;
+		--sce-my-pad-bottom: 80px;
+		--sce-my-head-mb: 36px;
+	}
+	.sce-scope .sce-my__title { font-size: 28px; line-height: 1.3; }
+	.sce-scope .sce-my__sub { font-size: 15px; }
+}
+
+@media (max-width: 600px) {
+	.sce-my {
+		--sce-shell-pad: 24px;
+		--sce-my-cols: 1;
+		--sce-my-pad-top: 56px;
+		--sce-my-pad-bottom: 60px;
+		--sce-my-gap-y: 16px;
+		--sce-my-card-pad: 24px;
+	}
+	.sce-scope .sce-my__title { font-size: 25px; }
+	.sce-scope .sce-my__eyebrow { margin-bottom: 6px; }
+}
+
+@media (max-width: 400px) {
+	.sce-my { --sce-shell-pad: 20px; }
+	.sce-scope .sce-my__title { font-size: 22px; }
+}

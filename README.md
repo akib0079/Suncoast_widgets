@@ -11,6 +11,8 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 | **Suncoast Featured Projects** | Split heading row over a 658/400 feature row and a four-up project grid |
 | **Suncoast Benefits Band** | Dark #1A1A1A band — heading over a four-up icon card row |
 | **Suncoast Testimonials + Path** | Cross-fading testimonial slider beside a numbered path that advances itself |
+| **Suncoast Make It Yours** | Cream section — heading over a six-up grid of white icon cards |
+| **Suncoast Difference** | Dark compare band — heading + button beside two columns of feature pairs |
 
 ---
 
@@ -61,6 +63,8 @@ plugin/suncoast-ele-widgets/     the WordPress plugin (this is what ships)
     widgets/class-sce-widget-projects.php
     widgets/class-sce-widget-band.php
     widgets/class-sce-widget-path.php
+    widgets/class-sce-widget-grid.php
+    widgets/class-sce-widget-difference.php
   assets/css|js/                 the hard-scoped CSS + vanilla JS
   templates/email-admin.php      admin notification e-mail
 
@@ -199,6 +203,27 @@ The numeral had to come out of the grid flow. As a grid item its 36px box set
 row one's height and pushed the description down — 98.5px of pitch instead of
 73. Absolutely positioning it leaves the step exactly title + description tall.
 
+### Make It Yours
+
+Within 1px everywhere: eyebrow 111, heading 128, short info 176, cards 246;
+container 1072 with 341.3px cards on 24/28 gaps, radius 15, padding 32.
+
+**The icons are deliberately bigger than the design.** Figma draws them at
+their natural ~17px, which reads small against a 341px card, so the default is
+**26px** and `--sce-my-icon` is a control. The six SVGs have mismatched
+viewBoxes (17×15 through 13×17); each renders inside one square box under
+`preserveAspectRatio`, so they end up optically even rather than literally
+equal. Cards take the extra height (144 vs the design's 134) as a result.
+
+### The Suncoast Difference
+
+Also within 1px: band 308, eyebrow 47, heading 71, button 188, feature columns
+at x466 and x786 inside the 1072 container, row pitch 85. Button 50 tall at
+radius 10 on `#EEB75D`.
+
+Features fill the columns **top-to-bottom, left column first**, so six items
+land as the Figma 3 × 2 rather than snaking across the rows.
+
 Two things the measurement caught that eyeballing would not:
 
 - The intro column needs **338px**, not the Figma-exact 334: line one measures
@@ -283,8 +308,20 @@ all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
   directions via `api.setVisible()`, including that `destroy()` leaves nothing
   ticking.
 
+**Make It Yours**
+- Cards lift on hover with a gold wash blooming from behind the icon
+  (opacity only) and the icon nudging up — plus a staggered entrance.
+- 3 → 2 → 1 columns at 1024 and 600.
+
+**The Suncoast Difference**
+- Gold button with the same gloss sweep as the hero CTA.
+- At 1024 the heading block spans both feature columns; single column at 600
+  with a full-width button.
+
 **Performance**
-- No libraries. Six small vanilla modules, deferred.
+- No libraries. Seven small vanilla modules, deferred. The grid and difference
+  widgets are reveal-only, so they share one `sce-reveal` module rather than
+  shipping two near-identical copies.
 - Assets are registered, never globally enqueued — a page using neither widget
   downloads none of this. Three font families, only the weights in use.
 - Scroll/resize handlers are rAF-throttled and passive; animation is

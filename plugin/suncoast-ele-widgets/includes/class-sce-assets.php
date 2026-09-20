@@ -63,6 +63,8 @@ final class SCE_Assets {
 		wp_register_style( 'sce-projects', $css . 'sce-projects.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-band', $css . 'sce-band.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-path', $css . 'sce-path.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-grid', $css . 'sce-grid.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-diff', $css . 'sce-diff.css', $base, SCE_VERSION );
 		// Maps Elementor Pro's form markup onto the Figma card design.
 		wp_register_style( 'sce-form-elementor', $css . 'sce-form-elementor.css', array( 'sce-banner' ), SCE_VERSION );
 
@@ -72,6 +74,8 @@ final class SCE_Assets {
 		wp_register_script( 'sce-projects', $js . 'sce-projects.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-band', $js . 'sce-band.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-path', $js . 'sce-path.js', array(), SCE_VERSION, true );
+		// shared by the grid and difference widgets — reveal only, no behaviour
+		wp_register_script( 'sce-reveal', $js . 'sce-reveal.js', array(), SCE_VERSION, true );
 
 		wp_localize_script(
 			'sce-banner',

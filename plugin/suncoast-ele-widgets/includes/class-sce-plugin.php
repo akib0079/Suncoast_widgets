@@ -54,6 +54,8 @@ final class SCE_Plugin {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-projects.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-band.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-path.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-grid.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-difference.php';
 
 		$widgets_manager->register( new SCE_Widget_Header() );
 		$widgets_manager->register( new SCE_Widget_Banner() );
@@ -61,6 +63,8 @@ final class SCE_Plugin {
 		$widgets_manager->register( new SCE_Widget_Projects() );
 		$widgets_manager->register( new SCE_Widget_Band() );
 		$widgets_manager->register( new SCE_Widget_Path() );
+		$widgets_manager->register( new SCE_Widget_Grid() );
+		$widgets_manager->register( new SCE_Widget_Difference() );
 	}
 
 
