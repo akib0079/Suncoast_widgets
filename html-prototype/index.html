@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suncoast Enclosures — Landing Page Widgets (HTML prototype)</title>
+<meta name="description" content="Static prototype of the Suncoast Elementor widgets: sticky blurred header and hero banner with lead form + marquee.">
+
+<!-- Fonts: only the weights the design actually uses -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&family=Poppins:wght@400;500;600&display=swap">
+
+<!-- LCP image: fetched in parallel with the CSS -->
+<link rel="preload" as="image" fetchpriority="high"
+      href="https://suncoastenclosures.com/wp-content/uploads/2026/09/1.-Hero-Section.png">
+
+<link rel="stylesheet" href="assets/css/sce-base.css">
+<link rel="stylesheet" href="assets/css/sce-header.css">
+<link rel="stylesheet" href="assets/css/sce-banner.css">
+
+<style>
+	/* ------------------------------------------------------------------
+	   PROTOTYPE-ONLY page chrome. None of this ships with the widgets —
+	   it exists so the sticky header, scroll-spy and smooth scrolling have
+	   real sections to work against.
+	   ------------------------------------------------------------------ */
+	html { scroll-behavior: smooth; }
+	body { margin: 0; background: #fff; font-family: Inter, system-ui, sans-serif; }
+	.demo { padding: 120px 48px; border-top: 1px solid #ECECEC; outline: none; }
+	.demo:nth-child(even) { background: #FAF8F4; }
+	.demo h2 { margin: 0 0 12px; font-family: "Playfair Display", serif; font-size: 40px; font-weight: 400; color: #1A1A1A; }
+	.demo p { margin: 0; max-width: 60ch; color: #6B7280; line-height: 1.7; }
+	.demo-note { max-width: 1200px; margin: 0 auto; }
+	@media (max-width: 768px) { .demo { padding: 72px 24px; } .demo h2 { font-size: 28px; } }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     WIDGET 1 — Suncoast Header
+     ========================================================================== -->
+<header class="sce-header sce-scope"
+        data-stick-at="8"
+        data-hide-on-scroll="no"
+        data-scrollspy="yes"
+        data-anchor-offset="12">
+
+	<!-- Fixed layer: everything visual lives here. `sce-scope` is repeated on
+	     purpose — sce-header.js may move this node to <body> when an Elementor
+	     ancestor carries a transform, and the styling must survive that. -->
+	<div class="sce-header__layer sce-scope">
+
+	<div class="sce-header__bar">
+		<div class="sce-header__inner sce-shell">
+
+			<!-- Logo -->
+			<a class="sce-header__brand" href="#top" aria-label="Suncoast Enclosures — Portland PNW">
+				<img class="sce-header__logo"
+				     src="https://suncoastenclosures.com/wp-content/uploads/2026/09/Link-1-1.png"
+				     alt="Suncoast Enclosures — Portland PNW"
+				     width="287" height="32"
+				     fetchpriority="high" decoding="async">
+			</a>
+
+			<!-- Desktop nav (scrolls to in-page sections) -->
+			<nav class="sce-header__nav" aria-label="Primary">
+				<ul class="sce-header__menu">
+					<li><a class="sce-header__nav-link" href="#products">Products</a></li>
+					<li><a class="sce-header__nav-link" href="#projects">Projects</a></li>
+					<li><a class="sce-header__nav-link" href="#process">Process</a></li>
+					<li><a class="sce-header__nav-link" href="#pricing">Pricing &amp; FAQ</a></li>
+				</ul>
+			</nav>
+
+			<!-- Phone + CTA -->
+			<div class="sce-header__actions">
+				<a class="sce-header__phone" href="tel:18774495106">
+					<svg class="sce-header__phone-ico" viewBox="0 0 13 19" fill="none" aria-hidden="true" focusable="false">
+						<path d="M9.35836 0.65H3.40002C1.88124 0.65 0.650024 1.88122 0.650024 3.4V14.8583C0.650024 16.3771 1.88124 17.6083 3.40002 17.6083H9.35836C10.8771 17.6083 12.1084 16.3771 12.1084 14.8583V3.4C12.1084 1.88122 10.8771 0.65 9.35836 0.65Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M5.46252 14.4H7.29586" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<span class="sce-header__phone-txt">1-877-449-5106</span>
+					<span class="sce-sr">Call Suncoast Enclosures</span>
+				</a>
+
+				<a class="sce-btn sce-header__cta" href="#quote">Request a Quote</a>
+
+				<button class="sce-header__burger" type="button"
+				        aria-expanded="false" aria-controls="sce-menu-panel">
+					<span class="sce-sr">Open menu</span>
+					<svg class="sce-header__burger-ico" viewBox="0 0 26 18" fill="none" aria-hidden="true" focusable="false">
+						<line y1="1" x2="26" y2="1"></line>
+						<line y1="9" x2="26" y2="9"></line>
+						<line y1="17" x2="26" y2="17"></line>
+					</svg>
+				</button>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Mobile overlay -->
+	<div class="sce-header__scrim" role="presentation"></div>
+
+	<div class="sce-header__panel" id="sce-menu-panel" role="dialog" aria-modal="true"
+	     aria-label="Site menu" aria-hidden="true" inert>
+
+		<div class="sce-header__panel-top">
+			<img class="sce-header__panel-logo"
+			     src="https://suncoastenclosures.com/wp-content/uploads/2026/09/Link-1-1.png"
+			     alt="Suncoast Enclosures" width="287" height="32" decoding="async">
+			<button class="sce-header__close" type="button">
+				<span class="sce-sr">Close menu</span>
+				<svg viewBox="0 0 15 15" fill="none" aria-hidden="true" focusable="false">
+					<line x1="1.41557" y1="0.707078" x2="14.1435" y2="13.435"></line>
+					<line x1="14.1421" y1="0.707229" x2="0.707105" y2="14.1423"></line>
+				</svg>
+			</button>
+		</div>
+
+		<nav aria-label="Mobile">
+			<ul class="sce-header__panel-menu">
+				<li style="--i:0"><a class="sce-header__panel-link" href="#products">Products</a></li>
+				<li style="--i:1"><a class="sce-header__panel-link" href="#projects">Projects</a></li>
+				<li style="--i:2"><a class="sce-header__panel-link" href="#process">Process</a></li>
+				<li style="--i:3"><a class="sce-header__panel-link" href="#pricing">Pricing &amp; FAQ</a></li>
+			</ul>
+		</nav>
+
+		<div class="sce-header__panel-foot">
+			<a class="sce-header__phone" href="tel:18774495106">
+				<svg class="sce-header__phone-ico" viewBox="0 0 13 19" fill="none" aria-hidden="true" focusable="false">
+					<path d="M9.35836 0.65H3.40002C1.88124 0.65 0.650024 1.88122 0.650024 3.4V14.8583C0.650024 16.3771 1.88124 17.6083 3.40002 17.6083H9.35836C10.8771 17.6083 12.1084 16.3771 12.1084 14.8583V3.4C12.1084 1.88122 10.8771 0.65 9.35836 0.65Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M5.46252 14.4H7.29586" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+				<span class="sce-header__phone-txt">1-877-449-5106</span>
+			</a>
+			<a class="sce-btn" href="#quote">Request a Quote</a>
+		</div>
+	</div>
+
+	</div><!-- /.sce-header__layer -->
+</header>
+
+
+<!-- ==========================================================================
+     WIDGET 2 — Suncoast Hero Banner (content + form + marquee)
+     ========================================================================== -->
+<section class="sce-banner sce-scope" id="top">
+
+	<div class="sce-banner__stage">
+
+		<div class="sce-banner__media">
+			<img class="sce-banner__img"
+			     src="https://suncoastenclosures.com/wp-content/uploads/2026/09/1.-Hero-Section.png"
+			     alt="" role="presentation"
+			     width="1280" height="830"
+			     fetchpriority="high" decoding="async">
+			<span class="sce-banner__overlay"></span>
+		</div>
+
+		<div class="sce-banner__inner">
+			<div class="sce-banner__grid">
+
+				<!-- Column 1 — content -->
+				<div class="sce-banner__content">
+
+					<span class="sce-banner__eyebrow sce-rv" style="--sce-rv-d:60ms">
+						Motorized Louvered Pergolas • Portland
+					</span>
+
+					<h1 class="sce-banner__title">
+						<span class="sce-rvline" style="--sce-rv-d:140ms"><span>Open to the Sky.</span></span>
+						<span class="sce-rvline" style="--sce-rv-d:240ms"><span>Closed to the <em>Rain.</em></span></span>
+					</h1>
+
+					<p class="sce-banner__text sce-rv" style="--sce-rv-d:380ms">
+						Engineered for the Pacific Northwest. Seamlessly control your outdoor
+						environment with precision-crafted louvers that adapt to Portland and
+						Vancouver's unpredictable weather.
+					</p>
+
+					<ul class="sce-banner__list">
+						<li class="sce-rv" style="--sce-rv-d:460ms">
+							<svg class="sce-banner__tick" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+								<circle cx="10" cy="10" r="10" fill="currentColor"/>
+								<path d="M5.9 10.25 8.4 12.75 14.1 7.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span>Precision remote-controlled louvers</span>
+						</li>
+						<li class="sce-rv" style="--sce-rv-d:520ms">
+							<svg class="sce-banner__tick" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+								<circle cx="10" cy="10" r="10" fill="currentColor"/>
+								<path d="M5.9 10.25 8.4 12.75 14.1 7.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span>Integrated hidden gutter system</span>
+						</li>
+						<li class="sce-rv" style="--sce-rv-d:580ms">
+							<svg class="sce-banner__tick" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+								<circle cx="10" cy="10" r="10" fill="currentColor"/>
+								<path d="M5.9 10.25 8.4 12.75 14.1 7.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span>Aircraft-grade extruded aluminum</span>
+						</li>
+						<li class="sce-rv" style="--sce-rv-d:640ms">
+							<svg class="sce-banner__tick" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+								<circle cx="10" cy="10" r="10" fill="currentColor"/>
+								<path d="M5.9 10.25 8.4 12.75 14.1 7.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span>Custom engineered for high snow/wind loads</span>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Column 2 — lead form -->
+				<div class="sce-banner__card-col" id="quote">
+					<div class="sce-card sce-rv" style="--sce-rv-d:300ms;--sce-rv-y:26px">
+
+						<span class="sce-card__eyebrow">Free Consultation</span>
+						<h2 class="sce-card__title">Let's Design Your Outdoor Space</h2>
+						<p class="sce-card__sub">Request a free site consultation.</p>
+
+						<form class="sce-form" method="post" action=""
+						      data-ajax="no"
+						      data-msg-invalid="Please complete the highlighted fields."
+						      data-msg-sending="Sending…"
+						      data-msg-success="Thank you — we'll be in touch within one business day."
+						      data-msg-error="Something went wrong. Please call 1-877-449-5106.">
+
+							<p class="sce-form__msg" aria-live="polite"></p>
+
+							<div class="sce-form__fields">
+								<div class="sce-form__field">
+									<label class="sce-sr" for="sce-name">Full Name</label>
+									<input class="sce-form__input" id="sce-name" name="full_name" type="text"
+									       placeholder="Full Name" autocomplete="name" required>
+								</div>
+								<div class="sce-form__field">
+									<label class="sce-sr" for="sce-phone">Phone Number</label>
+									<input class="sce-form__input" id="sce-phone" name="phone" type="tel"
+									       placeholder="Phone Number" autocomplete="tel"
+									       data-mask="tel" required>
+								</div>
+								<div class="sce-form__field">
+									<label class="sce-sr" for="sce-zip">Zip Code</label>
+									<input class="sce-form__input" id="sce-zip" name="zip" type="text"
+									       placeholder="Zip Code" autocomplete="postal-code"
+									       inputmode="numeric" pattern="\d{5}" maxlength="5"
+									       data-mask="zip" required>
+								</div>
+							</div>
+
+							<div class="sce-form__group">
+								<label class="sce-form__label" for="sce-type">What are you looking to cover?</label>
+								<div class="sce-form__field">
+									<select class="sce-form__select" id="sce-type" name="project_type" required>
+										<option value="" disabled selected>Select project type</option>
+										<option value="patio">Patio</option>
+										<option value="deck">Deck</option>
+										<option value="pool-area">Pool area</option>
+										<option value="outdoor-kitchen">Outdoor kitchen</option>
+										<option value="three-season-room">Three-season room</option>
+										<option value="other">Something else</option>
+									</select>
+									<svg class="sce-form__chev" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
+										<path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</div>
+							</div>
+
+							<button class="sce-form__submit" type="submit">Get My Free Estimate</button>
+
+							<p class="sce-form__note">No obligation. Secure &amp; confidential.</p>
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Marquee -->
+	<div class="sce-banner__marquee">
+		<div class="sce-mq" data-speed="55">
+			<div class="sce-mq__track">
+				<ul class="sce-mq__set">
+					<li>Open sky<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Shade on demand<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Rain ready<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Portland + Vancouver<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Outdoor Living, Reimagined<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Living Experiences<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+				</ul>
+				<ul class="sce-mq__set" aria-hidden="true">
+					<li>Open sky<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Shade on demand<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Rain ready<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Portland + Vancouver<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Outdoor Living, Reimagined<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+					<li>Living Experiences<svg class="sce-mq__sep" viewBox="0 0 7 12" fill="none" aria-hidden="true" focusable="false"><path d="m1 1 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<!-- ==========================================================================
+     Placeholder sections — prototype only, so the nav has somewhere to scroll
+     ========================================================================== -->
+<main>
+	<section class="demo" id="products"><div class="demo-note">
+		<h2>Products</h2>
+		<p>Placeholder. Scroll-spy should be highlighting “Products” in the header right now, and the header should be compressed with a blurred, translucent background.</p>
+	</div></section>
+
+	<section class="demo" id="projects"><div class="demo-note">
+		<h2>Projects</h2>
+		<p>Placeholder. Click each nav item to confirm the smooth scroll lands with the section title clear of the sticky bar.</p>
+	</div></section>
+
+	<section class="demo" id="process"><div class="demo-note">
+		<h2>Process</h2>
+		<p>Placeholder. Resize the window below 1024px to test the hamburger panel, focus trap and Escape-to-close.</p>
+	</div></section>
+
+	<section class="demo" id="pricing"><div class="demo-note">
+		<h2>Pricing &amp; FAQ</h2>
+		<p>Placeholder. The last section is tall enough that scroll-spy can reach it at the bottom of the page.</p>
+	</div></section>
+
+	<section class="demo" style="min-height:60vh"><div class="demo-note">
+		<h2>End of prototype</h2>
+		<p>Everything above this line is what becomes the two Elementor widgets.</p>
+	</div></section>
+</main>
+
+<script src="assets/js/sce-header.js" defer></script>
+<script src="assets/js/sce-banner.js" defer></script>
+</body>
+</html>

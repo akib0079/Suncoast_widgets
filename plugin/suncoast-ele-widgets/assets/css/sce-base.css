@@ -1,0 +1,276 @@
+/* ==========================================================================
+   Suncoast Elementor Widgets — Base tokens + theme-proof scoped reset
+   --------------------------------------------------------------------------
+   SPECIFICITY CONTRACT — read before editing any widget stylesheet.
+
+     reset      .sce-scope.sce-scope :where(h1, p, …)   ->  (0,2,0)
+     component  .sce-scope .sce-widget__thing            ->  (0,2,0)  + later
+     state      .sce-widget.is-x .sce-widget__thing      ->  (0,3,0)
+
+   The reset is deliberately parked at (0,2,0): high enough to beat the
+   `.entry-content h1` / `body h1` / `h1` rules every WP theme ships, low
+   enough that our own component rules win the tie on source order (base.css
+   is always enqueued as a dependency, i.e. first). `:where()` keeps the
+   element names from adding specificity, which is what makes the tie work.
+
+   => EVERY component selector must start with `.sce-scope `.
+      Nothing in this project uses `!important`.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+.sce-scope {
+	/* Brand palette (from Figma) */
+	--sce-gold: #EBB04D;
+	--sce-gold-hi: #F2BE63;
+	--sce-gold-icon: #EEB75D;
+	--sce-gold-soft: #F7DEB4;
+	--sce-gold-ink: #5A421B;
+
+	--sce-ink: #1A1A1A;
+	--sce-ink-2: #1A1C1C;
+	--sce-ink-btn: #0F0F0F;
+	--sce-muted: #6B7280;
+	--sce-line: #E5E7EB;
+	--sce-para: #E5E5E5;
+
+	--sce-white: #FFFFFF;
+	--sce-cream: #FCFAF5;
+	--sce-shell: #F9F6F0;
+
+	/* Type families */
+	--sce-font-ui: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--sce-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--sce-font-display: "Playfair Display", "Iowan Old Style", "Times New Roman", Georgia, serif;
+
+	/* Layout */
+	--sce-shell-max: 1440px;
+	--sce-shell-pad: 48px;
+
+	/* Motion — one easing vocabulary across every widget */
+	--sce-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+	--sce-ease-expo: cubic-bezier(0.16, 1, 0.30, 1);
+	--sce-ease-spring: cubic-bezier(0.34, 1.35, 0.42, 1);
+	--sce-dur-fast: 0.18s;
+	--sce-dur: 0.34s;
+	--sce-dur-slow: 0.72s;
+
+	/* Focus ring (accessible, brand-coloured) */
+	--sce-ring: 0 0 0 3px rgba(235, 176, 77, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   2. Scoped reset — neutralises inherited theme styling
+   -------------------------------------------------------------------------- */
+.sce-scope.sce-scope,
+.sce-scope.sce-scope *,
+.sce-scope.sce-scope *::before,
+.sce-scope.sce-scope *::after {
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.sce-scope.sce-scope {
+	display: block;
+	font-family: var(--sce-font-body);
+	font-size: 16px;
+	font-weight: 400;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	word-spacing: normal;
+	text-transform: none;
+	text-align: left;
+	text-indent: 0;
+	text-shadow: none;
+	color: var(--sce-ink);
+	font-variant-ligatures: normal;
+	font-feature-settings: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+/* Block + text elements: strip theme margins, borders, fonts, decorations */
+.sce-scope.sce-scope :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, dd,
+	figure, figcaption, blockquote, form, fieldset, legend, table, address, hr, label) {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	font: inherit;
+	color: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	text-align: inherit;
+	text-decoration: none;
+	list-style: none;
+	quotes: none;
+}
+
+/* Inline semantics we actively use */
+.sce-scope.sce-scope :where(em, i, strong, b, span, small) {
+	font: inherit;
+	color: inherit;
+	letter-spacing: inherit;
+	background: none;
+	text-decoration: none;
+}
+.sce-scope.sce-scope :where(strong, b) { font-weight: 700; }
+.sce-scope.sce-scope :where(em, i) { font-style: italic; }
+
+/* Links */
+.sce-scope.sce-scope :where(a) {
+	color: inherit;
+	background: none;
+	border: 0;
+	box-shadow: none;
+	text-decoration: none;
+	text-decoration-color: transparent;
+	outline: none;
+	cursor: pointer;
+}
+.sce-scope.sce-scope :where(a:hover, a:focus, a:active, a:visited) {
+	text-decoration: none;
+	box-shadow: none;
+}
+
+/* Form controls — the single biggest source of theme bleed */
+.sce-scope.sce-scope :where(button, input, select, textarea) {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	background-image: none;
+	box-shadow: none;
+	outline: none;
+	font: inherit;
+	font-family: var(--sce-font-body);
+	color: inherit;
+	letter-spacing: normal;
+	text-transform: none;
+	text-align: left;
+	line-height: normal;
+	width: auto;
+	max-width: none;
+	min-height: 0;
+	height: auto;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+.sce-scope.sce-scope :where(button, [type="button"], [type="submit"]) {
+	cursor: pointer;
+	text-align: center;
+}
+.sce-scope.sce-scope :where(input, textarea, select):focus {
+	outline: none;
+	box-shadow: none;
+}
+.sce-scope.sce-scope :where(select)::-ms-expand { display: none; }
+.sce-scope.sce-scope :where(input)::-webkit-outer-spin-button,
+.sce-scope.sce-scope :where(input)::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.sce-scope.sce-scope :where(input[type="number"]) { -moz-appearance: textfield; }
+/* Kill Chrome's yellow autofill wash */
+.sce-scope.sce-scope :where(input, textarea, select):-webkit-autofill {
+	-webkit-text-fill-color: var(--sce-ink-2);
+	-webkit-box-shadow: 0 0 0 1000px var(--sce-white) inset;
+	box-shadow: 0 0 0 1000px var(--sce-white) inset;
+	transition: background-color 9999s ease-out 0s;
+}
+
+/* Media */
+.sce-scope.sce-scope :where(img, svg, video, picture, canvas) {
+	display: block;
+	max-width: 100%;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	vertical-align: middle;
+}
+.sce-scope.sce-scope :where(img) { height: auto; }
+.sce-scope.sce-scope :where(svg) { flex: none; }
+
+/* --------------------------------------------------------------------------
+   3. Shared primitives
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-shell {
+	width: 100%;
+	max-width: var(--sce-shell-max);
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+.sce-scope .sce-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Accessible focus ring, shared by every interactive element */
+.sce-scope :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+	outline: none;
+	box-shadow: var(--sce-ring);
+	border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Reveal-on-scroll primitive (GPU-only: opacity + transform)
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-rv {
+	opacity: 0;
+	transform: translate3d(0, var(--sce-rv-y, 18px), 0);
+	transition:
+		opacity var(--sce-dur-slow) var(--sce-ease-expo) var(--sce-rv-d, 0ms),
+		transform var(--sce-dur-slow) var(--sce-ease-expo) var(--sce-rv-d, 0ms);
+}
+.sce-scope.is-revealed .sce-rv,
+.sce-scope .is-revealed .sce-rv {
+	opacity: 1;
+	transform: none;
+}
+
+/* Masked line reveal, used for display headings */
+.sce-scope .sce-rvline {
+	display: block;
+	overflow: hidden;
+	/* room for descenders so `y`, `g`, `p` are not clipped by the mask */
+	padding-bottom: 0.14em;
+	margin-bottom: -0.14em;
+}
+.sce-scope .sce-rvline > span {
+	display: block;
+	transform: translate3d(0, 112%, 0);
+	transition: transform 0.95s var(--sce-ease-expo) var(--sce-rv-d, 0ms);
+}
+.sce-scope.is-revealed .sce-rvline > span,
+.sce-scope .is-revealed .sce-rvline > span {
+	transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Reduced motion — honour the OS setting everywhere
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope.sce-scope *,
+	.sce-scope.sce-scope *::before,
+	.sce-scope.sce-scope *::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+	.sce-scope .sce-rv { opacity: 1; transform: none; }
+	.sce-scope .sce-rvline > span { transform: none; }
+}

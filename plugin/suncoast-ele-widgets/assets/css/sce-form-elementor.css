@@ -1,0 +1,212 @@
+/* ==========================================================================
+   Suncoast — Elementor Pro Form skin
+   --------------------------------------------------------------------------
+   Loaded only when the banner widget's "Form built with" control is set to
+   "Elementor saved template". It maps Elementor Pro's form markup onto the
+   Figma card so a Pro form is visually identical to the built-in one.
+
+   Selectors are prefixed with `.sce-scope` per the project contract, and
+   additionally scoped to `.sce-form--elementor` so no other form on the site
+   is touched.
+   ========================================================================== */
+
+.sce-scope .sce-form--elementor .elementor-form-fields-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 0;
+}
+
+/* Elementor lays fields out on its own 100-column grid — collapse it. */
+.sce-scope .sce-form--elementor .elementor-field-group {
+	width: 100%;
+	max-width: 100%;
+	flex: 0 0 100%;
+	padding: 0;
+	margin: 0;
+}
+
+/* Labels ----------------------------------------------------------------- */
+.sce-scope .sce-form--elementor .elementor-field-label {
+	display: block;
+	margin-bottom: 8px;
+	padding: 0;
+	font-family: var(--sce-font-body);
+	font-size: 10px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sce-muted);
+}
+/* Elementor hides labels via a screen-reader class when "Label" is off */
+.sce-scope .sce-form--elementor .elementor-screen-only { position: absolute; }
+
+/* Text inputs, textareas and selects -------------------------------------- */
+.sce-scope .sce-form--elementor .elementor-field-textual,
+.sce-scope .sce-form--elementor input[type="text"],
+.sce-scope .sce-form--elementor input[type="email"],
+.sce-scope .sce-form--elementor input[type="tel"],
+.sce-scope .sce-form--elementor input[type="number"],
+.sce-scope .sce-form--elementor input[type="url"],
+.sce-scope .sce-form--elementor select,
+.sce-scope .sce-form--elementor textarea {
+	display: block;
+	width: 100%;
+	min-height: 0;
+	height: 50px;
+	padding: 0 16px;
+	border: 1px solid var(--sce-line);
+	border-radius: 8px;
+	background-color: var(--sce-white);
+	background-image: none;
+	box-shadow: none;
+	font-family: var(--sce-font-body);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 48px;
+	color: var(--sce-ink-2);
+	transition:
+		border-color var(--sce-dur) var(--sce-ease),
+		box-shadow var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-form--elementor textarea {
+	height: auto;
+	min-height: 110px;
+	padding: 14px 16px;
+	line-height: 1.5;
+	resize: vertical;
+}
+.sce-scope .sce-form--elementor select {
+	padding-right: 42px;
+	cursor: pointer;
+	/* chevron, inlined so the skin needs no extra request */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 16px center;
+	background-size: 12px 12px;
+}
+.sce-scope .sce-form--elementor ::placeholder { color: var(--sce-muted); opacity: 1; }
+
+.sce-scope .sce-form--elementor .elementor-field-textual:hover,
+.sce-scope .sce-form--elementor select:hover,
+.sce-scope .sce-form--elementor textarea:hover { border-color: #D6D8DC; }
+
+.sce-scope .sce-form--elementor .elementor-field-textual:focus,
+.sce-scope .sce-form--elementor select:focus,
+.sce-scope .sce-form--elementor textarea:focus {
+	border-color: var(--sce-gold);
+	box-shadow: 0 0 0 3px rgba(235, 176, 77, 0.18);
+	outline: none;
+}
+
+/* Checkboxes / radios ----------------------------------------------------- */
+.sce-scope .sce-form--elementor .elementor-field-subgroup {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 18px;
+}
+.sce-scope .sce-form--elementor .elementor-field-option label {
+	font-family: var(--sce-font-body);
+	font-size: 13px;
+	color: var(--sce-ink-2);
+	text-transform: none;
+	letter-spacing: normal;
+}
+.sce-scope .sce-form--elementor input[type="checkbox"],
+.sce-scope .sce-form--elementor input[type="radio"] {
+	width: 16px;
+	height: 16px;
+	accent-color: var(--sce-gold);
+	-webkit-appearance: auto;
+	appearance: auto;
+}
+
+/* Submit ------------------------------------------------------------------ */
+.sce-scope .sce-form--elementor .elementor-field-type-submit {
+	margin-top: 8px;
+}
+.sce-scope .sce-form--elementor .elementor-button {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 0;
+	height: 52px;
+	padding: 0 20px;
+	border: 0;
+	border-radius: 8px;
+	background-color: var(--sce-ink-btn);
+	font-family: var(--sce-font-body);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sce-white);
+	box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+	transition:
+		transform 0.38s var(--sce-ease-expo),
+		box-shadow 0.38s var(--sce-ease),
+		background-color 0.38s var(--sce-ease);
+}
+.sce-scope .sce-form--elementor .elementor-button::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 34%, rgba(255, 255, 255, 0.22) 50%, transparent 66%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+}
+.sce-scope .sce-form--elementor .elementor-button:hover,
+.sce-scope .sce-form--elementor .elementor-button:focus-visible {
+	background-color: #000;
+	transform: translateY(-2px);
+	box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.6);
+}
+.sce-scope .sce-form--elementor .elementor-button:hover::after,
+.sce-scope .sce-form--elementor .elementor-button:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-form--elementor .elementor-button:active { transform: translateY(0); }
+.sce-scope .sce-form--elementor .elementor-button-content-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+/* Messages ---------------------------------------------------------------- */
+.sce-scope .sce-form--elementor .elementor-message {
+	margin-top: 12px;
+	padding: 12px 14px;
+	border-radius: 8px;
+	font-family: var(--sce-font-body);
+	font-size: 13px;
+	line-height: 1.45;
+}
+.sce-scope .sce-form--elementor .elementor-message.elementor-message-success {
+	background-color: rgba(43, 138, 62, 0.1);
+	color: #1E6B32;
+}
+.sce-scope .sce-form--elementor .elementor-message.elementor-message-danger {
+	background-color: rgba(217, 83, 79, 0.1);
+	color: #A3322E;
+}
+.sce-scope .sce-form--elementor .elementor-field-group.elementor-error .elementor-field {
+	border-color: #D9534F;
+	box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.14);
+}
+.sce-scope .sce-form--elementor .elementor-error .elementor-error-message {
+	margin-top: 6px;
+	font-size: 12px;
+	color: #A3322E;
+}
+
+@media (max-width: 480px) {
+	.sce-scope .sce-form--elementor .elementor-field-textual,
+	.sce-scope .sce-form--elementor select { height: 48px; line-height: 46px; }
+	.sce-scope .sce-form--elementor .elementor-button { height: 50px; }
+}

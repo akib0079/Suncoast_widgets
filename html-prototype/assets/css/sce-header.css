@@ -1,0 +1,543 @@
+/* ==========================================================================
+   Suncoast — Header / Navbar widget
+   Figma: logo 287x32 @ x48 y24.5  ->  bar height 81px
+          nav   Poppins 500 13/15.6 ls .65 uppercase
+          phone Poppins 500 14 ls .56
+          CTA   174x40, pad 12/24, radius 3, #EBB04D, Poppins 600 13 ls .65
+
+   STRUCTURE
+     .sce-header          root, stays in flow as a zero-CLS spacer
+     └ .sce-header__layer fixed layer: bar + scrim + panel. Carries `sce-scope`
+                          and every state class, because sce-header.js may
+                          re-home it to <body> when an Elementor ancestor has a
+                          transform (which silently breaks `position:fixed`).
+
+   STYLING CONTRACT
+     Every Elementor control writes a CSS custom property, never a plain
+     declaration. That is what lets the layer keep its look after being
+     re-homed: the JS copies the resolved `--sce-*` values onto it. Adding a
+     control means adding a variable here first.
+   ========================================================================== */
+
+/* Defaults live on BOTH so the layer survives being re-homed. */
+.sce-header,
+.sce-header__layer {
+	/* -- bar ------------------------------------------------------------ */
+	--sce-hdr-h: 81px;
+	--sce-hdr-h-stuck: 72px;
+	--sce-hdr-overlap: 0px;
+
+	--sce-hdr-bg: rgba(249, 246, 240, 0.86);
+	--sce-hdr-bg-stuck: rgba(249, 246, 240, 0.78);
+	--sce-hdr-blur: 16px;
+	--sce-hdr-blur-stuck: 26px;
+	--sce-hdr-border: rgba(26, 26, 26, 0);
+	--sce-hdr-border-stuck: rgba(26, 26, 26, 0.08);
+	--sce-hdr-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	--sce-hdr-shadow-stuck: 0 10px 34px -18px rgba(24, 18, 5, 0.42);
+	--sce-hdr-z: 9990;
+
+	/* -- logo ----------------------------------------------------------- */
+	--sce-hdr-logo-h: 32px;
+	--sce-hdr-logo-h-panel: 26px;
+
+	/* -- nav ------------------------------------------------------------ */
+	--sce-hdr-nav-gap: 30px;
+	--sce-hdr-nav-color: var(--sce-ink);
+	--sce-hdr-nav-hover: var(--sce-gold-ink);
+	--sce-hdr-nav-active: var(--sce-gold-ink);
+	--sce-hdr-nav-underline: var(--sce-gold);
+	--sce-hdr-nav-size: 13px;
+	--sce-hdr-nav-weight: 500;
+	--sce-hdr-nav-ls: 0.65px;
+	--sce-hdr-nav-tt: uppercase;
+
+	/* -- phone ---------------------------------------------------------- */
+	--sce-hdr-phone-color: var(--sce-ink);
+	--sce-hdr-phone-hover: var(--sce-gold-ink);
+	--sce-hdr-phone-icon: var(--sce-gold-icon);
+	--sce-hdr-phone-size: 14px;
+	--sce-hdr-phone-ls: 0.56px;
+
+	/* -- CTA ------------------------------------------------------------ */
+	--sce-cta-bg: var(--sce-gold);
+	--sce-cta-bg-hover: var(--sce-gold-hi);
+	--sce-cta-color: var(--sce-ink);
+	--sce-cta-color-hover: var(--sce-ink);
+	--sce-cta-radius: 3px;
+	--sce-cta-w: 174px;
+	--sce-cta-h: 40px;
+	--sce-cta-size: 13px;
+	--sce-cta-weight: 600;
+	--sce-cta-ls: 0.65px;
+
+	/* -- panel ---------------------------------------------------------- */
+	--sce-hdr-panel-bg: var(--sce-white);
+	--sce-hdr-panel-w: 420px;
+	--sce-hdr-panel-link: var(--sce-ink);
+	--sce-hdr-panel-link-hover: var(--sce-gold-ink);
+	--sce-hdr-panel-size: 15px;
+	--sce-hdr-burger-color: var(--sce-ink);
+	--sce-hdr-scrim: rgba(18, 14, 6, 0.42);
+
+	/* scrollbar compensation, written by JS when the menu locks scroll */
+	--sce-hdr-sbw: 0px;
+}
+
+.sce-scope.sce-header {
+	position: relative;
+	z-index: var(--sce-hdr-z);
+	height: calc(var(--sce-hdr-h) - var(--sce-hdr-overlap));
+}
+
+/* --------------------------------------------------------------------------
+   Bar
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__bar {
+	position: fixed;
+	inset: 0 0 auto 0;
+	z-index: var(--sce-hdr-z);
+	height: var(--sce-hdr-h);
+	padding-right: var(--sce-hdr-sbw);
+	background-color: var(--sce-hdr-bg);
+	border-bottom: 1px solid var(--sce-hdr-border);
+	box-shadow: var(--sce-hdr-shadow);
+	-webkit-backdrop-filter: blur(var(--sce-hdr-blur)) saturate(150%);
+	backdrop-filter: blur(var(--sce-hdr-blur)) saturate(150%);
+	transition:
+		height 0.42s var(--sce-ease-expo),
+		background-color 0.42s var(--sce-ease),
+		border-color 0.42s var(--sce-ease),
+		box-shadow 0.42s var(--sce-ease),
+		-webkit-backdrop-filter 0.42s var(--sce-ease),
+		backdrop-filter 0.42s var(--sce-ease),
+		transform 0.5s var(--sce-ease-expo);
+}
+
+.sce-header__layer.is-stuck .sce-header__bar {
+	height: var(--sce-hdr-h-stuck);
+	background-color: var(--sce-hdr-bg-stuck);
+	border-bottom-color: var(--sce-hdr-border-stuck);
+	box-shadow: var(--sce-hdr-shadow-stuck);
+	-webkit-backdrop-filter: blur(var(--sce-hdr-blur-stuck)) saturate(165%);
+	backdrop-filter: blur(var(--sce-hdr-blur-stuck)) saturate(165%);
+}
+
+/* Optional auto-hide (data-hide-on-scroll="yes") */
+.sce-header__layer.is-hidden .sce-header__bar { transform: translate3d(0, -102%, 0); }
+.sce-header__layer.is-menu-open .sce-header__bar { transform: none; }
+
+/* No backdrop-filter (older Firefox): go opaque so text stays legible */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+	.sce-scope .sce-header__bar,
+	.sce-header__layer.is-stuck .sce-header__bar { background-color: #F9F6F0; }
+}
+
+.sce-scope .sce-header__inner {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Brand
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__brand {
+	flex: 0 0 auto;
+	display: block;
+	line-height: 0;
+	transition: opacity var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-header__brand:hover { opacity: 0.78; }
+
+.sce-scope .sce-header__logo {
+	display: block;
+	width: auto;
+	height: var(--sce-hdr-logo-h);
+	transition: height 0.42s var(--sce-ease-expo);
+}
+.sce-header__layer.is-stuck .sce-header__logo { height: calc(var(--sce-hdr-logo-h) - 3px); }
+
+/* A separate mobile logo, when one is supplied */
+.sce-scope .sce-header__logo--mobile { display: none; }
+@media (max-width: 767px) {
+	.sce-scope .sce-header__brand.has-mobile-logo .sce-header__logo--desktop { display: none; }
+	.sce-scope .sce-header__brand.has-mobile-logo .sce-header__logo--mobile { display: block; }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop navigation
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__nav {
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 0;
+}
+
+.sce-scope .sce-header__menu {
+	display: flex;
+	align-items: center;
+	gap: var(--sce-hdr-nav-gap);
+}
+
+.sce-scope .sce-header__nav-link {
+	position: relative;
+	display: block;
+	padding: 6px 0;
+	font-family: var(--sce-font-ui);
+	font-size: var(--sce-hdr-nav-size);
+	font-weight: var(--sce-hdr-nav-weight);
+	line-height: 1.2;
+	letter-spacing: var(--sce-hdr-nav-ls);
+	text-transform: var(--sce-hdr-nav-tt);
+	white-space: nowrap;
+	color: var(--sce-hdr-nav-color);
+	transition: color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-header__nav-link::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 1px;
+	height: 1.5px;
+	background-color: var(--sce-hdr-nav-underline);
+	transform: scaleX(0);
+	transform-origin: right center;
+	transition: transform 0.44s var(--sce-ease-expo);
+}
+.sce-scope .sce-header__nav-link:hover,
+.sce-scope .sce-header__nav-link:focus-visible { color: var(--sce-hdr-nav-hover); }
+.sce-scope .sce-header__nav-link:hover::after,
+.sce-scope .sce-header__nav-link:focus-visible::after {
+	transform: scaleX(1);
+	transform-origin: left center;
+}
+.sce-scope .sce-header__nav-link.is-active { color: var(--sce-hdr-nav-active); }
+.sce-scope .sce-header__nav-link.is-active::after {
+	transform: scaleX(1);
+	transform-origin: left center;
+}
+
+/* --------------------------------------------------------------------------
+   Actions: phone + CTA
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__actions {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}
+
+.sce-scope .sce-header__phone {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	font-family: var(--sce-font-ui);
+	font-size: var(--sce-hdr-phone-size);
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: var(--sce-hdr-phone-ls);
+	color: var(--sce-hdr-phone-color);
+	transition: color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-header__phone-ico {
+	width: 13px;
+	height: 19px;
+	color: var(--sce-hdr-phone-icon);
+	transition: transform 0.5s var(--sce-ease-spring), color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-header__phone:hover { color: var(--sce-hdr-phone-hover); }
+.sce-scope .sce-header__phone:hover .sce-header__phone-ico {
+	color: var(--sce-gold);
+	transform: translateY(-2px) rotate(-8deg);
+}
+
+/* Gold CTA — shared by desktop bar and mobile panel */
+.sce-scope .sce-btn {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 24px;
+	border-radius: var(--sce-cta-radius);
+	background-color: var(--sce-cta-bg);
+	font-family: var(--sce-font-ui);
+	font-size: var(--sce-cta-size);
+	font-weight: var(--sce-cta-weight);
+	line-height: 1.2;
+	letter-spacing: var(--sce-cta-ls);
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--sce-cta-color);
+	box-shadow: 0 1px 2px rgba(90, 66, 27, 0.16);
+	transition:
+		transform 0.38s var(--sce-ease-expo),
+		box-shadow 0.38s var(--sce-ease),
+		color 0.38s var(--sce-ease),
+		background-color 0.38s var(--sce-ease);
+}
+.sce-scope .sce-btn::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.58) 48%, transparent 64%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+	pointer-events: none;
+}
+.sce-scope .sce-btn:hover,
+.sce-scope .sce-btn:focus-visible {
+	background-color: var(--sce-cta-bg-hover);
+	color: var(--sce-cta-color-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 10px 24px -8px rgba(199, 140, 40, 0.58);
+}
+.sce-scope .sce-btn:hover::after,
+.sce-scope .sce-btn:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-btn:active { transform: translateY(0); box-shadow: 0 2px 8px -3px rgba(199, 140, 40, 0.5); }
+
+.sce-scope .sce-header__cta { min-width: var(--sce-cta-w); height: var(--sce-cta-h); }
+
+/* --------------------------------------------------------------------------
+   Burger
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__burger {
+	display: none;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-right: -10px;
+	border-radius: 6px;
+	color: var(--sce-hdr-burger-color);
+	transition: background-color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-header__burger:hover { background-color: rgba(26, 26, 26, 0.06); }
+.sce-scope .sce-header__burger-ico { width: 26px; height: 18px; }
+.sce-scope .sce-header__burger-ico line {
+	stroke: currentColor;
+	stroke-width: 2;
+	transform-origin: 50% 50%;
+	transition: transform 0.42s var(--sce-ease-expo), opacity 0.22s var(--sce-ease);
+}
+.sce-scope .sce-header__burger:hover .sce-header__burger-ico line:nth-child(1) { transform: translateY(-1px); }
+.sce-scope .sce-header__burger:hover .sce-header__burger-ico line:nth-child(3) { transform: translateY(1px); }
+
+/* --------------------------------------------------------------------------
+   Mobile panel
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-header__scrim {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--sce-hdr-z) - 2);
+	background-color: var(--sce-hdr-scrim);
+	opacity: 0;
+	visibility: hidden;
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
+	transition: opacity 0.42s var(--sce-ease), visibility 0s linear 0.42s;
+}
+.sce-header__layer.is-menu-open .sce-header__scrim {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.42s var(--sce-ease), visibility 0s;
+}
+
+.sce-scope .sce-header__panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: calc(var(--sce-hdr-z) - 1);
+	display: flex;
+	flex-direction: column;
+	width: min(var(--sce-hdr-panel-w), 100vw);
+	padding: 0 20px 24px;
+	background-color: var(--sce-hdr-panel-bg);
+	box-shadow: -18px 0 60px -30px rgba(20, 14, 4, 0.55);
+	transform: translate3d(100%, 0, 0);
+	visibility: hidden;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+	transition: transform 0.52s var(--sce-ease-expo), visibility 0s linear 0.52s;
+}
+.sce-header__layer.is-menu-open .sce-header__panel {
+	transform: none;
+	visibility: visible;
+	transition: transform 0.52s var(--sce-ease-expo), visibility 0s;
+}
+
+.sce-scope .sce-header__panel-top {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	min-height: 64px;
+	margin-inline: -20px;
+	padding-inline: 20px;
+}
+.sce-scope .sce-header__panel-logo {
+	display: block;
+	width: auto;
+	height: var(--sce-hdr-logo-h-panel);
+}
+
+.sce-scope .sce-header__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-right: -10px;
+	border-radius: 6px;
+	color: #202020;
+	transition: background-color var(--sce-dur) var(--sce-ease), transform 0.5s var(--sce-ease-spring);
+}
+.sce-scope .sce-header__close:hover { background-color: rgba(26, 26, 26, 0.06); transform: rotate(90deg); }
+.sce-scope .sce-header__close svg { width: 15px; height: 15px; }
+.sce-scope .sce-header__close svg line { stroke: currentColor; stroke-width: 2; }
+
+.sce-scope .sce-header__panel-menu {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	padding-top: 22px;
+}
+.sce-scope .sce-header__panel-menu li {
+	opacity: 0;
+	transform: translate3d(14px, 0, 0);
+	transition: opacity 0.5s var(--sce-ease-expo), transform 0.5s var(--sce-ease-expo);
+}
+.sce-header__layer.is-menu-open .sce-header__panel-menu li {
+	opacity: 1;
+	transform: none;
+	transition-delay: calc(90ms + (var(--i, 0) * 55ms));
+}
+
+.sce-scope .sce-header__panel-link {
+	position: relative;
+	display: block;
+	padding: 15px 0;
+	font-family: var(--sce-font-ui);
+	font-size: var(--sce-hdr-panel-size);
+	font-weight: 500;
+	line-height: 1.2;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--sce-hdr-panel-link);
+	transition: color var(--sce-dur) var(--sce-ease), padding-left 0.4s var(--sce-ease-expo);
+}
+.sce-scope .sce-header__panel-link::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 14px;
+	height: 1.5px;
+	margin-top: -0.75px;
+	background-color: var(--sce-hdr-nav-underline);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.4s var(--sce-ease-expo);
+}
+.sce-scope .sce-header__panel-link:hover,
+.sce-scope .sce-header__panel-link.is-active { color: var(--sce-hdr-panel-link-hover); padding-left: 24px; }
+.sce-scope .sce-header__panel-link:hover::before,
+.sce-scope .sce-header__panel-link.is-active::before { transform: scaleX(1); }
+
+.sce-scope .sce-header__panel-foot {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 16px;
+	padding-top: 28px;
+	opacity: 0;
+	transform: translate3d(0, 12px, 0);
+	transition: opacity 0.5s var(--sce-ease-expo), transform 0.5s var(--sce-ease-expo);
+}
+.sce-header__layer.is-menu-open .sce-header__panel-foot {
+	opacity: 1;
+	transform: none;
+	transition-delay: 320ms;
+}
+.sce-scope .sce-header__panel-foot .sce-header__phone { align-self: flex-start; }
+.sce-scope .sce-header__panel-foot .sce-btn { height: 46px; width: 100%; min-width: 0; }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+/* Tight desktop — pull spacing in before switching to the burger */
+@media (max-width: 1280px) {
+	.sce-header,
+	.sce-header__layer { --sce-shell-pad: 32px; --sce-hdr-nav-gap: 22px; }
+	.sce-scope .sce-header__actions { gap: 16px; }
+	.sce-scope .sce-header__cta { min-width: 0; }
+}
+
+@media (max-width: 1120px) {
+	.sce-header,
+	.sce-header__layer { --sce-hdr-logo-h: 28px; --sce-hdr-nav-gap: 18px; }
+	.sce-scope .sce-header__nav-link { font-size: 12px; letter-spacing: 0.5px; }
+	.sce-scope .sce-header__phone { font-size: 13px; }
+}
+
+/* Burger takeover */
+@media (max-width: 1024px) {
+	.sce-header,
+	.sce-header__layer {
+		--sce-hdr-h: 68px;
+		--sce-hdr-h-stuck: 62px;
+		--sce-hdr-logo-h: 28px;
+		--sce-shell-pad: 24px;
+	}
+	.sce-scope .sce-header__nav { display: none; }
+	.sce-scope .sce-header__actions { margin-left: auto; }
+	.sce-scope .sce-header__burger { display: inline-flex; }
+	.sce-scope .sce-header__bar .sce-header__phone-txt { display: none; }
+	.sce-scope .sce-header__bar .sce-header__phone {
+		width: 40px;
+		height: 40px;
+		justify-content: center;
+		gap: 0;
+		border-radius: 6px;
+		background-color: rgba(235, 176, 77, 0.12);
+	}
+	.sce-scope .sce-header__cta { height: 38px; padding: 10px 18px; font-size: 12px; }
+}
+
+@media (max-width: 600px) {
+	.sce-header,
+	.sce-header__layer {
+		--sce-hdr-h: 64px;
+		--sce-hdr-h-stuck: 58px;
+		--sce-hdr-logo-h: 26px;
+		--sce-shell-pad: 20px;
+	}
+	.sce-scope .sce-header__inner { gap: 12px; }
+	.sce-scope .sce-header__actions { gap: 8px; }
+	/* On phones the CTA lives in the panel; the bar keeps phone + burger only */
+	.sce-scope .sce-header__cta { display: none; }
+	.sce-scope .sce-header__panel { width: 100vw; box-shadow: none; }
+}
+
+@media (max-width: 360px) {
+	.sce-header,
+	.sce-header__layer { --sce-hdr-logo-h: 22px; --sce-shell-pad: 16px; }
+}
+
+/* --------------------------------------------------------------------------
+   Elementor editor: the bar would otherwise cover the panel's drop zone
+   -------------------------------------------------------------------------- */
+.elementor-editor-active .sce-header__layer.is-hidden .sce-header__bar { transform: none; }
