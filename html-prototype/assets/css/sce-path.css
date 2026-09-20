@@ -1,0 +1,409 @@
+/* ==========================================================================
+   Suncoast — Testimonials + Path widget
+   Figma (measured 1:1 from the export; section background #FCFAF5):
+
+     container 1070, columns 442 / 581 with a 47 gap
+     CARD    442 wide x 439, radius 3, #FFFFFF, 1px #E5E5E5 @20%, drop shadow,
+             padding 40
+       eyebrow  Poppins 400 10/15 ls 2.6 #EBB04D      (mb 10)
+       heading  Poppins 700 28/42 #1A1C1C + Playfair *italic* #EBB04D accent
+       stars    5 x #EBB04D, 65 wide
+       quote    Poppins *italic* 16/24 #444748
+       divider  1px hairline, then the byline
+       byline   "— NAME" left, "VERIFIED" right
+     PATH
+       eyebrow  Poppins 400 10/15 ls 2.6 #EBB04D
+       heading  Poppins 700 24/36 #1A1C1C + Playfair *italic* #EBB04D accent
+       step     numeral column 30 + 26 gap; pitch 73
+       numeral  Playfair 400 24/36 #EBB04D — 100% when active, 40% when not
+       title    Poppins 700 11/16.5 ls 1.1 #1A1C1C
+       desc     Poppins 400 13/19.5 #444748
+       CTA      Poppins 700 10/15 ls 1 #1A1A1A, underlined
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-path {
+	--sce-path-bg: #FCFAF5;
+	--sce-path-max: 1070px;
+	--sce-path-pad-top: 90px;
+	--sce-path-pad-bottom: 94px;
+	--sce-path-cols: 442fr 581fr;
+	--sce-path-gap: 47px;
+
+	/* card */
+	--sce-card-bg: #FFFFFF;
+	--sce-card-radius: 3px;
+	--sce-card-border: rgba(229, 229, 229, 0.2);
+	--sce-card-shadow: 0 18px 44px -28px rgba(26, 26, 26, 0.28);
+	--sce-card-pad: 40px;
+	--sce-card-min-h: 439px;
+
+	--sce-path-ink: var(--sce-ink-2);
+	--sce-path-muted: #444748;
+
+	/* steps */
+	--sce-step-num-w: 30px;
+	--sce-step-gap: 26px;
+	--sce-step-pitch: 33px;
+	--sce-step-dim: 0.4;
+	--sce-step-rule: rgba(26, 28, 28, 0.14);
+
+	--sce-dot-size: 7px;
+	--sce-dot-gap: 8px;
+}
+
+.sce-scope.sce-path {
+	position: relative;
+	background-color: var(--sce-path-bg);
+	padding-block: var(--sce-path-pad-top) var(--sce-path-pad-bottom);
+}
+
+.sce-scope .sce-path__inner {
+	width: 100%;
+	max-width: calc(var(--sce-path-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+.sce-scope .sce-path__grid {
+	display: grid;
+	grid-template-columns: var(--sce-path-cols);
+	gap: var(--sce-path-gap);
+	align-items: start;
+}
+
+/* ==========================================================================
+   Column 1 — testimonial slider
+   ========================================================================== */
+.sce-scope .sce-tm {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: var(--sce-card-min-h);
+	padding: var(--sce-card-pad);
+	border: 1px solid var(--sce-card-border);
+	border-radius: var(--sce-card-radius);
+	background-color: var(--sce-card-bg);
+	box-shadow: var(--sce-card-shadow);
+}
+
+.sce-scope .sce-tm__eyebrow {
+	display: block;
+	margin-bottom: 10px;
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-tm__title {
+	display: flow-root;
+	font-family: var(--sce-font-ui);
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 42px;
+	letter-spacing: 0;
+	color: var(--sce-path-ink);
+}
+.sce-scope .sce-tm__title em {
+	font-family: var(--sce-font-display);
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+
+/* Decorative quote glyph tucked under the heading */
+.sce-scope .sce-tm__mark {
+	display: block;
+	margin-top: -4px;
+	font-family: var(--sce-font-display);
+	font-size: 34px;
+	line-height: 0.6;
+	color: rgba(235, 176, 77, 0.16);
+	user-select: none;
+}
+
+/* ---- the slide stack ---------------------------------------------------- */
+.sce-scope .sce-tm__stage {
+	position: relative;
+	display: grid;
+	flex: 1 1 auto;
+	margin-top: 18px;
+}
+/* Every slide occupies the same cell, so the card height is the tallest one
+   and nothing reflows as they cross-fade. */
+.sce-scope .sce-tm__slide {
+	grid-area: 1 / 1;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	opacity: 0;
+	visibility: hidden;
+	transform: translate3d(0, 8px, 0);
+	transition:
+		opacity 0.6s var(--sce-ease),
+		transform 0.6s var(--sce-ease-expo),
+		visibility 0s linear 0.6s;
+}
+.sce-scope .sce-tm__slide.is-active {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition:
+		opacity 0.6s var(--sce-ease),
+		transform 0.6s var(--sce-ease-expo),
+		visibility 0s;
+}
+
+.sce-scope .sce-tm__stars {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	margin-bottom: 18px;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-tm__stars svg { width: 13px; height: 13px; }
+.sce-scope .sce-tm__stars svg.is-empty { opacity: 0.25; }
+
+.sce-scope .sce-tm__quote {
+	margin-bottom: 20px;
+	font-family: var(--sce-font-ui);
+	font-size: 16px;
+	font-style: italic;
+	font-weight: 400;
+	line-height: 24px;
+	color: var(--sce-path-muted);
+}
+
+.sce-scope .sce-tm__foot {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+	margin-top: auto;
+	padding-top: 18px;
+	border-top: 1px solid rgba(26, 28, 28, 0.08);
+}
+.sce-scope .sce-tm__name {
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	color: var(--sce-path-ink);
+}
+.sce-scope .sce-tm__badge {
+	flex: none;
+	font-family: var(--sce-font-ui);
+	font-size: 8px;
+	font-weight: 400;
+	line-height: 12px;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+	color: var(--sce-muted);
+}
+
+/* ---- pagination --------------------------------------------------------- */
+.sce-scope .sce-tm__dots {
+	display: flex;
+	align-items: center;
+	gap: var(--sce-dot-gap);
+	margin-top: 20px;
+}
+.sce-scope .sce-tm__dot {
+	position: relative;
+	width: var(--sce-dot-size);
+	height: var(--sce-dot-size);
+	padding: 0;
+	border-radius: 50%;
+	background-color: rgba(26, 28, 28, 0.18);
+	transition: background-color 0.4s var(--sce-ease), transform 0.4s var(--sce-ease-spring);
+}
+/* generous touch target without changing the visual size */
+.sce-scope .sce-tm__dot::before {
+	content: "";
+	position: absolute;
+	inset: -9px;
+}
+.sce-scope .sce-tm__dot:hover { background-color: rgba(26, 28, 28, 0.35); }
+.sce-scope .sce-tm__dot.is-active {
+	background-color: var(--sce-gold);
+	transform: scale(1.25);
+}
+
+/* ==========================================================================
+   Column 2 — path
+   ========================================================================== */
+.sce-scope .sce-path__col { min-width: 0; }
+
+.sce-scope .sce-path__eyebrow {
+	display: block;
+	margin-bottom: 17px;
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-path__title {
+	display: flow-root;
+	margin-bottom: 46px;
+	font-family: var(--sce-font-ui);
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 36px;
+	letter-spacing: 0;
+	color: var(--sce-path-ink);
+}
+.sce-scope .sce-path__title em {
+	font-family: var(--sce-font-display);
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-path__steps {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sce-step-pitch);
+}
+
+.sce-scope .sce-path__step {
+	position: relative;
+	padding-left: calc(var(--sce-step-num-w) + var(--sce-step-gap));
+}
+/* The rule that links one numeral to the next — drawn on the step rather
+   than between them so the last one simply has none. */
+.sce-scope .sce-path__step::before {
+	content: "";
+	position: absolute;
+	top: 46px;
+	left: calc(var(--sce-step-num-w) / 2);
+	width: 1px;
+	height: calc(100% - 46px + var(--sce-step-pitch));
+	background-color: var(--sce-step-rule);
+	transform: scaleY(0);
+	transform-origin: top center;
+	transition: transform 0.7s var(--sce-ease-expo);
+}
+.sce-scope .sce-path__step:last-child::before { display: none; }
+.sce-scope.is-revealed .sce-path__step::before { transform: scaleY(1); }
+
+.sce-scope .sce-path__num {
+	position: absolute;
+	top: 5px;
+	left: 0;
+	width: var(--sce-step-num-w);
+	font-family: var(--sce-font-display);
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 36px;
+	letter-spacing: 0;
+	color: var(--sce-gold);
+	opacity: var(--sce-step-dim);
+	transition: opacity 0.55s var(--sce-ease), transform 0.55s var(--sce-ease-expo);
+}
+.sce-scope .sce-path__step.is-active .sce-path__num {
+	opacity: 1;
+	transform: translateY(-1px);
+}
+
+.sce-scope .sce-path__step-title {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	color: var(--sce-path-ink);
+	transition: color 0.45s var(--sce-ease);
+}
+.sce-scope .sce-path__step-desc {
+	display: block;
+	margin-top: 4px;
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	color: var(--sce-path-muted);
+}
+
+.sce-scope .sce-path__cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	margin-top: 41px;
+	padding-bottom: 7px;
+	border-bottom: 1px solid var(--sce-path-ink);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 15px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: #1A1A1A;
+	transition: color 0.35s var(--sce-ease), border-color 0.35s var(--sce-ease), gap 0.35s var(--sce-ease-expo);
+}
+.sce-scope .sce-path__cta svg { width: 11px; height: 11px; }
+.sce-scope .sce-path__cta:hover,
+.sce-scope .sce-path__cta:focus-visible {
+	color: var(--sce-gold-ink);
+	border-bottom-color: var(--sce-gold);
+	gap: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-path { --sce-shell-pad: 40px; --sce-path-gap: 36px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-path {
+		--sce-shell-pad: 32px;
+		--sce-path-cols: minmax(0, 1fr);
+		--sce-path-gap: 40px;
+		--sce-path-pad-top: 72px;
+		--sce-path-pad-bottom: 76px;
+		--sce-card-min-h: 0px;
+	}
+	.sce-scope .sce-tm { max-width: 620px; }
+	.sce-scope .sce-path__title { font-size: 22px; line-height: 1.45; }
+}
+
+@media (max-width: 600px) {
+	.sce-path {
+		--sce-shell-pad: 24px;
+		--sce-path-pad-top: 56px;
+		--sce-path-pad-bottom: 60px;
+		--sce-card-pad: 28px;
+		--sce-step-num-w: 26px;
+		--sce-step-gap: 18px;
+		--sce-step-pitch: 28px;
+	}
+	.sce-scope .sce-tm__title { font-size: 24px; line-height: 1.4; }
+	.sce-scope .sce-tm__quote { font-size: 15px; line-height: 23px; }
+	.sce-scope .sce-path__title { font-size: 21px; }
+	.sce-scope .sce-path__step::before { top: 40px; height: calc(100% - 40px + var(--sce-step-pitch)); }
+}
+
+@media (max-width: 400px) {
+	.sce-path { --sce-shell-pad: 20px; --sce-card-pad: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope .sce-path__step::before { transform: scaleY(1); }
+	.sce-scope .sce-tm__slide { transition: none; }
+}

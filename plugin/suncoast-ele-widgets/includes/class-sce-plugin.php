@@ -52,11 +52,15 @@ final class SCE_Plugin {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-banner.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-benefits.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-projects.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-band.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-path.php';
 
 		$widgets_manager->register( new SCE_Widget_Header() );
 		$widgets_manager->register( new SCE_Widget_Banner() );
 		$widgets_manager->register( new SCE_Widget_Benefits() );
 		$widgets_manager->register( new SCE_Widget_Projects() );
+		$widgets_manager->register( new SCE_Widget_Band() );
+		$widgets_manager->register( new SCE_Widget_Path() );
 	}
 
 

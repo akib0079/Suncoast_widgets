@@ -9,6 +9,8 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 | **Suncoast Hero Banner** | Hero photo + content column + lead form card + marquee strip |
 | **Suncoast Benefits + Video** | Centred heading, three-up benefit grid, video teaser with a popup player |
 | **Suncoast Featured Projects** | Split heading row over a 658/400 feature row and a four-up project grid |
+| **Suncoast Benefits Band** | Dark #1A1A1A band — heading over a four-up icon card row |
+| **Suncoast Testimonials + Path** | Cross-fading testimonial slider beside a numbered path that advances itself |
 
 ---
 
@@ -57,6 +59,8 @@ plugin/suncoast-ele-widgets/     the WordPress plugin (this is what ships)
     widgets/class-sce-widget-banner.php
     widgets/class-sce-widget-benefits.php
     widgets/class-sce-widget-projects.php
+    widgets/class-sce-widget-band.php
+    widgets/class-sce-widget-path.php
   assets/css|js/                 the hard-scoped CSS + vanilla JS
   templates/email-admin.php      admin notification e-mail
 
@@ -179,6 +183,22 @@ Feature row is 658 + 12 + 400, the four-up row 4 × 255.5 with 16px gaps, rows
 Rows use `aspect-ratio` rather than fixed heights (658/400, 400/400, 255.5/288)
 so the proportions survive any container width.
 
+### Benefits Band
+
+Exact — zero deltas across every check: band 562 tall, 94/120 padding, eyebrow
+at 94, heading at 118 (Poppins 700 36/51 white + Playfair *italic* gold accent),
+cards at 271→442, 249.5×171 with 24px gaps, 46px icon tiles at radius 12 on a
+`#EBB04D` @10% fill and a white @10% hairline.
+
+### Testimonials + Path
+
+Every element within 1px: card at x105 y90, 442×439; path column at x594;
+step pitch 73 with the numeral column at 594 and content at 650; CTA at 504.
+
+The numeral had to come out of the grid flow. As a grid item its 36px box set
+row one's height and pushed the description down — 98.5px of pitch instead of
+73. Absolutely positioning it leaves the step exactly title + description tall.
+
 Two things the measurement caught that eyeballing would not:
 
 - The intro column needs **338px**, not the Figma-exact 334: line one measures
@@ -246,8 +266,25 @@ all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
 - 860px and below: feature row stacks, four-up halves, then single column at
   600px with the crops moving to 16/9 and 16/10.
 
+**Benefits Band**
+- Cards stagger in; on hover the tile lifts and warms and a gold hairline wipes
+  in from the left — transform/opacity only.
+- 4 → 2 → 1 columns at 1024 and 600.
+
+**Testimonials + Path**
+- Slider cross-fades in a single grid cell, so the card height is the tallest
+  slide and nothing reflows mid-transition. Dots are real tablist buttons with
+  arrow-key support and a 25px touch target; swipe works on touch.
+- Path steps light up 01 → 02 → 03 → 04; hovering or tabbing a step takes over
+  from the timer so the visitor is never fighting the clock.
+- **One IntersectionObserver gates both timers**, and `start()` also checks
+  `document.hidden` — a tab that is already hidden at init never fires
+  `visibilitychange`, so the listener alone would miss it. Verified in both
+  directions via `api.setVisible()`, including that `destroy()` leaves nothing
+  ticking.
+
 **Performance**
-- No libraries. Four small vanilla modules, deferred.
+- No libraries. Six small vanilla modules, deferred.
 - Assets are registered, never globally enqueued — a page using neither widget
   downloads none of this. Three font families, only the weights in use.
 - Scroll/resize handlers are rAF-throttled and passive; animation is

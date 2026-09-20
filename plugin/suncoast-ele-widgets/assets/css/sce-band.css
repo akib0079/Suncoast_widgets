@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Suncoast — Benefits Band widget (dark)
+   Figma (measured 1:1 from the export; section 1280x562, fill #1A1A1A):
+
+     padding   94 top / 120 bottom, container 1070
+     eyebrow   Poppins 400 10/15 ls 2.6 #EBB04D uppercase
+     heading   Poppins 700 36/51 #FFFFFF + Playfair *italic* #EBB04D accent,
+               column 672 wide
+     cards     4 x 250, gap 24, 171 tall, radius 3, fill #242424, padding 32
+     icon      46x46 tile, radius 12, #EBB04D @10% fill + white @10% hairline,
+               glyph #EBB04D
+     title     Poppins 500 14/16.5 ls 1.1 #FFFFFF uppercase
+     desc      Poppins 400 13/19.5 #E5E5E5 @70%
+
+     Measured gaps: eyebrow->heading 9, heading->cards 51, icon->title 15,
+     title->desc 8 (Figma's auto-layout gap of 8 only holds for the latter).
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-band {
+	--sce-band-bg: #1A1A1A;
+	--sce-band-max: 1070px;
+	--sce-band-pad-top: 94px;
+	--sce-band-pad-bottom: 120px;
+
+	--sce-band-head-w: 672px;
+	--sce-band-eyebrow-mb: 9px;
+	--sce-band-head-mb: 51px;
+
+	--sce-band-cols: 4;
+	--sce-band-gap: 24px;
+
+	--sce-band-card-bg: #242424;
+	--sce-band-card-bg-hover: #2C2C2C;
+	--sce-band-card-radius: 3px;
+	--sce-band-card-pad: 32px;
+	--sce-band-card-min-h: 171px;
+
+	--sce-band-icon: 46px;
+	--sce-band-icon-radius: 12px;
+	--sce-band-icon-bg: rgba(235, 176, 77, 0.1);
+	--sce-band-icon-ring: rgba(255, 255, 255, 0.1);
+	--sce-band-icon-mb: 15px;
+
+	--sce-band-title-mb: 8px;
+	--sce-band-ink: var(--sce-white);
+	--sce-band-muted: rgba(229, 229, 229, 0.7);
+}
+
+.sce-scope.sce-band {
+	position: relative;
+	background-color: var(--sce-band-bg);
+	padding-block: var(--sce-band-pad-top) var(--sce-band-pad-bottom);
+}
+
+.sce-scope .sce-band__inner {
+	width: 100%;
+	max-width: calc(var(--sce-band-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Heading
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-band__head {
+	max-width: var(--sce-band-head-w);
+	margin-bottom: var(--sce-band-head-mb);
+}
+
+.sce-scope .sce-band__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-band-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-band__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	font-family: var(--sce-font-ui);
+	font-size: 36px;
+	font-weight: 700;
+	line-height: 51px;
+	letter-spacing: 0;
+	color: var(--sce-band-ink);
+}
+/* Playfair's ascent metric is taller than Poppins', so without a capped
+   line-height the accent would inflate its line box and shove the baseline
+   down — see sce-projects.css for the same fix. */
+.sce-scope .sce-band__title em {
+	font-family: var(--sce-font-display);
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-band__title--upright em { font-style: normal; }
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-band__grid {
+	display: grid;
+	grid-template-columns: repeat(var(--sce-band-cols), minmax(0, 1fr));
+	gap: var(--sce-band-gap);
+	align-items: stretch;
+}
+
+.sce-scope .sce-band__card {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: var(--sce-band-card-min-h);
+	padding: var(--sce-band-card-pad);
+	border-radius: var(--sce-band-card-radius);
+	background-color: var(--sce-band-card-bg);
+	transition:
+		background-color 0.45s var(--sce-ease),
+		transform 0.55s var(--sce-ease-expo);
+}
+/* A single gold hairline that wipes in from the left on hover — cheaper and
+   calmer than animating a real border. */
+.sce-scope .sce-band__card::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background-color: var(--sce-gold);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.55s var(--sce-ease-expo);
+}
+.sce-scope .sce-band__card:hover {
+	background-color: var(--sce-band-card-bg-hover);
+	transform: translateY(-3px);
+}
+.sce-scope .sce-band__card:hover::after { transform: scaleX(1); }
+
+.sce-scope .sce-band__icon {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--sce-band-icon);
+	height: var(--sce-band-icon);
+	margin-bottom: var(--sce-band-icon-mb);
+	border: 1px solid var(--sce-band-icon-ring);
+	border-radius: var(--sce-band-icon-radius);
+	background-color: var(--sce-band-icon-bg);
+	color: var(--sce-gold);
+	transition:
+		background-color 0.45s var(--sce-ease),
+		border-color 0.45s var(--sce-ease),
+		transform 0.6s var(--sce-ease-spring);
+}
+.sce-scope .sce-band__icon svg,
+.sce-scope .sce-band__icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.sce-scope .sce-band__card:hover .sce-band__icon {
+	background-color: rgba(235, 176, 77, 0.18);
+	border-color: rgba(235, 176, 77, 0.35);
+	transform: translateY(-2px) scale(1.04);
+}
+
+.sce-scope .sce-band__name {
+	margin-bottom: var(--sce-band-title-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	color: var(--sce-band-ink);
+}
+
+.sce-scope .sce-band__desc {
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	letter-spacing: 0;
+	color: var(--sce-band-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-band { --sce-shell-pad: 40px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-band {
+		--sce-shell-pad: 32px;
+		--sce-band-cols: 2;
+		--sce-band-pad-top: 72px;
+		--sce-band-pad-bottom: 80px;
+		--sce-band-head-mb: 40px;
+		--sce-band-head-w: none;
+	}
+	.sce-scope .sce-band__title { font-size: 30px; line-height: 1.34; }
+}
+
+@media (max-width: 600px) {
+	.sce-band {
+		--sce-shell-pad: 24px;
+		--sce-band-cols: 1;
+		--sce-band-pad-top: 56px;
+		--sce-band-pad-bottom: 60px;
+		--sce-band-gap: 16px;
+		--sce-band-card-pad: 24px;
+		--sce-band-card-min-h: 0px;
+		--sce-band-icon-mb: 14px;
+	}
+	.sce-scope .sce-band__title { font-size: 26px; }
+}
+
+@media (max-width: 400px) {
+	.sce-band { --sce-shell-pad: 20px; }
+	.sce-scope .sce-band__title { font-size: 23px; }
+}

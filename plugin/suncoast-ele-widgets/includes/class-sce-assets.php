@@ -61,6 +61,8 @@ final class SCE_Assets {
 		wp_register_style( 'sce-banner', $css . 'sce-banner.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-benefits', $css . 'sce-benefits.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-projects', $css . 'sce-projects.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-band', $css . 'sce-band.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-path', $css . 'sce-path.css', $base, SCE_VERSION );
 		// Maps Elementor Pro's form markup onto the Figma card design.
 		wp_register_style( 'sce-form-elementor', $css . 'sce-form-elementor.css', array( 'sce-banner' ), SCE_VERSION );
 
@@ -68,6 +70,8 @@ final class SCE_Assets {
 		wp_register_script( 'sce-banner', $js . 'sce-banner.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-benefits', $js . 'sce-benefits.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-projects', $js . 'sce-projects.js', array(), SCE_VERSION, true );
+		wp_register_script( 'sce-band', $js . 'sce-band.js', array(), SCE_VERSION, true );
+		wp_register_script( 'sce-path', $js . 'sce-path.js', array(), SCE_VERSION, true );
 
 		wp_localize_script(
 			'sce-banner',
@@ -83,14 +87,14 @@ final class SCE_Assets {
 	/**
 	 * Only three families, only the weights the design actually uses.
 	 *
-	 * Poppins 400/500/600/700 · Inter 400/500/600/700 · Playfair Display 400/600 + 400i
+	 * Poppins 400/500/600/700 + 400i · Inter 400/500/600/700 · Playfair Display 400/600 + 400i
 	 */
 	public function fonts_url() {
 		return add_query_arg(
 			array(
 				'family'  => rawurlencode( 'Inter:wght@400;500;600;700' )
 					. '&family=' . rawurlencode( 'Playfair Display:ital,wght@0,400;0,600;1,400' )
-					. '&family=' . rawurlencode( 'Poppins:wght@400;500;600;700' ),
+					. '&family=' . rawurlencode( 'Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400' ),
 				'display' => 'swap',
 			),
 			'https://fonts.googleapis.com/css2'
