@@ -1,0 +1,320 @@
+/* ==========================================================================
+   Suncoast — Featured Projects widget
+   Figma (measured 1:1 from the section export; section background #FFFFFF,
+   unlike the cream sections around it):
+
+     container 1070
+     eyebrow   Poppins 400 10/15  ls 2.4  #EBB04D uppercase
+     heading   Poppins 700 32/44  #000000, accent = Playfair 400 32 #EBB04D
+               (upright — the two faces are mixed inside one heading)
+     intro     Poppins 400 14/1.6 #444748, column 334 wide, bottom-aligned
+               with the heading
+
+     row 1     658fr + 400fr, gap 12, 400 tall
+     row gap   12
+     row 2     4 x 255.5, gap 16, 288 tall
+     card      radius 20, cover image + bottom veil
+               veil = linear-gradient(to top, #1A1A1A 80% 0%, transparent 50%)
+     large     pad 24 | label Poppins 400 9/13.5 ls .9 | title Playfair 400 24/36
+     small     pad 16 | label Poppins 400 8/12  ls .8 | title Playfair 400 16/24
+     arrow     34x34 ring rgba(255,255,255,.3) + glyph rgba(255,255,255,.5),
+               inset 24 from the bottom-right, large cards only
+
+   NOTE ON THE TOP PADDING
+     The export's white band starts flush with the eyebrow's line box — the
+     section carries no top padding and leans on the cream section above for
+     separation. `--sce-fp-pad-top` keeps that by default; set it if the
+     widget is ever used on its own.
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-fp {
+	--sce-fp-bg: #FFFFFF;
+	--sce-fp-max: 1070px;
+	--sce-fp-pad-top: 0px;
+	--sce-fp-pad-bottom: 38px;
+
+	--sce-fp-eyebrow-mb: 11px;
+	--sce-fp-head-gap: 48px;
+	--sce-fp-head-mb: 41px;
+	--sce-fp-intro-w: 338px;
+	--sce-fp-title-max: 560px;
+
+	--sce-fp-top-cols: 658fr 400fr;
+	--sce-fp-top-gap: 12px;
+	--sce-fp-row-gap: 12px;
+	--sce-fp-bottom-cols: 4;
+	--sce-fp-bottom-gap: 16px;
+
+	/* Ratios rather than fixed heights, so the rows stay proportional at any
+	   container width: 658/400 and 400/400 in row 1, 255.5/288 in row 2. */
+	--sce-fp-ratio-a: 658 / 400;
+	--sce-fp-ratio-b: 400 / 400;
+	--sce-fp-ratio-sm: 255.5 / 288;
+
+	--sce-fp-radius: 20px;
+	--sce-fp-veil: linear-gradient(
+		to top,
+		rgba(26, 26, 26, 0.8) 0%,
+		rgba(26, 26, 26, 0) 50%,
+		rgba(26, 26, 26, 0) 100%
+	);
+
+	--sce-fp-pad-lg: 24px;
+	--sce-fp-pad-sm: 16px;
+	--sce-fp-gap-lg: 4px;
+	--sce-fp-gap-sm: 3px;
+
+	--sce-fp-arrow: 34px;
+	--sce-fp-arrow-inset: 24px;
+	--sce-fp-arrow-ring: rgba(255, 255, 255, 0.3);
+	--sce-fp-arrow-ink: rgba(255, 255, 255, 0.5);
+
+	--sce-fp-ink: #000000;
+	--sce-fp-muted: #444748;
+}
+
+.sce-scope.sce-fp {
+	position: relative;
+	background-color: var(--sce-fp-bg);
+	padding-block: var(--sce-fp-pad-top) var(--sce-fp-pad-bottom);
+}
+
+.sce-scope .sce-fp__inner {
+	width: 100%;
+	max-width: calc(var(--sce-fp-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Heading row — heading left, intro right, both sitting on the same baseline
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-fp__head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--sce-fp-intro-w);
+	align-items: end;
+	gap: var(--sce-fp-head-gap);
+	margin-bottom: var(--sce-fp-head-mb);
+}
+
+.sce-scope .sce-fp__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-fp-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.4px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-fp__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	max-width: var(--sce-fp-title-max);
+	font-family: var(--sce-font-ui);
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.375;
+	letter-spacing: 0;
+	color: var(--sce-fp-ink);
+}
+/* The accent swaps face as well as colour — Playfair, upright, same size. */
+.sce-scope .sce-fp__title em {
+	font-family: var(--sce-font-display);
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-fp__title--italic em { font-style: italic; }
+
+.sce-scope .sce-fp__intro {
+	font-family: var(--sce-font-ui);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sce-fp-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Grids
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-fp__row {
+	display: grid;
+	align-items: stretch;
+}
+.sce-scope .sce-fp__row--top {
+	grid-template-columns: var(--sce-fp-top-cols);
+	gap: var(--sce-fp-top-gap);
+}
+.sce-scope .sce-fp__row--bottom {
+	grid-template-columns: repeat(var(--sce-fp-bottom-cols), minmax(0, 1fr));
+	gap: var(--sce-fp-bottom-gap);
+	margin-top: var(--sce-fp-row-gap);
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-fp__card {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	min-width: 0;
+	border-radius: var(--sce-fp-radius);
+	background-color: #1A1A1A;
+	color: var(--sce-white);
+}
+.sce-scope .sce-fp__row--top > .sce-fp__card { aspect-ratio: var(--sce-fp-ratio-b); }
+.sce-scope .sce-fp__row--top > .sce-fp__card:first-child { aspect-ratio: var(--sce-fp-ratio-a); }
+.sce-scope .sce-fp__row--bottom > .sce-fp__card { aspect-ratio: var(--sce-fp-ratio-sm); }
+
+.sce-scope .sce-fp__img {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+	object-position: center;
+	transition: transform 1.05s var(--sce-ease-expo);
+}
+.sce-scope .sce-fp__veil {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--sce-fp-veil);
+}
+a.sce-fp__card:hover .sce-fp__img,
+a.sce-fp__card:focus-visible .sce-fp__img { transform: scale(1.05); }
+
+.sce-scope .sce-fp__body {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.sce-scope .sce-fp__card--lg .sce-fp__body {
+	padding: var(--sce-fp-pad-lg);
+	gap: var(--sce-fp-gap-lg);
+	/* keep the copy clear of the arrow */
+	padding-right: calc(var(--sce-fp-pad-lg) + var(--sce-fp-arrow) + 12px);
+}
+.sce-scope .sce-fp__card--sm .sce-fp__body {
+	padding: var(--sce-fp-pad-sm);
+	gap: var(--sce-fp-gap-sm);
+}
+
+.sce-scope .sce-fp__label {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-weight: 400;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+.sce-scope .sce-fp__card--lg .sce-fp__label { font-size: 9px; line-height: 13.5px; letter-spacing: 0.9px; }
+.sce-scope .sce-fp__card--sm .sce-fp__label { font-size: 8px; line-height: 12px; letter-spacing: 0.8px; }
+
+.sce-scope .sce-fp__name {
+	display: block;
+	font-family: var(--sce-font-display);
+	font-weight: 400;
+	letter-spacing: 0;
+	color: var(--sce-white);
+}
+.sce-scope .sce-fp__card--lg .sce-fp__name { font-size: 24px; line-height: 36px; }
+.sce-scope .sce-fp__card--sm .sce-fp__name { font-size: 16px; line-height: 24px; }
+
+/* Arrow ------------------------------------------------------------------ */
+.sce-scope .sce-fp__arrow {
+	position: absolute;
+	right: var(--sce-fp-arrow-inset);
+	bottom: var(--sce-fp-arrow-inset);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--sce-fp-arrow);
+	height: var(--sce-fp-arrow);
+	border-radius: 50%;
+	border: 1px solid var(--sce-fp-arrow-ring);
+	color: var(--sce-fp-arrow-ink);
+	transition:
+		background-color 0.4s var(--sce-ease),
+		border-color 0.4s var(--sce-ease),
+		color 0.4s var(--sce-ease),
+		transform 0.5s var(--sce-ease-spring);
+}
+.sce-scope .sce-fp__arrow svg { width: 16px; height: 16px; }
+a.sce-fp__card:hover .sce-fp__arrow,
+a.sce-fp__card:focus-visible .sce-fp__arrow {
+	background-color: var(--sce-gold);
+	border-color: var(--sce-gold);
+	color: var(--sce-ink);
+	transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-fp { --sce-shell-pad: 40px; --sce-fp-head-gap: 40px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-fp {
+		--sce-shell-pad: 32px;
+		--sce-fp-intro-w: 300px;
+		--sce-fp-title-max: none;
+	}
+	.sce-scope .sce-fp__title { font-size: 28px; }
+}
+
+/* The 658/400 split and four-up row both stop working before tablet, so the
+   top row stacks and the bottom row halves. */
+@media (max-width: 860px) {
+	.sce-fp {
+		--sce-fp-top-cols: minmax(0, 1fr);
+		--sce-fp-bottom-cols: 2;
+		--sce-fp-ratio-a: 16 / 9;
+		--sce-fp-ratio-b: 16 / 9;
+		--sce-fp-ratio-sm: 4 / 3;
+		--sce-fp-top-gap: 16px;
+		--sce-fp-row-gap: 16px;
+		--sce-fp-pad-top: 56px;
+		--sce-fp-pad-bottom: 56px;
+	}
+	.sce-scope .sce-fp__head {
+		grid-template-columns: minmax(0, 1fr);
+		align-items: start;
+		gap: 18px;
+		margin-bottom: 32px;
+	}
+	.sce-scope .sce-fp__intro { max-width: 620px; }
+}
+
+@media (max-width: 600px) {
+	.sce-fp {
+		--sce-shell-pad: 24px;
+		--sce-fp-bottom-cols: 1;
+		--sce-fp-ratio-sm: 16 / 10;
+		--sce-fp-pad-lg: 20px;
+		--sce-fp-pad-sm: 20px;
+		--sce-fp-arrow-inset: 20px;
+	}
+	.sce-scope .sce-fp__title { font-size: 26px; line-height: 1.3; }
+	.sce-scope .sce-fp__card--lg .sce-fp__name { font-size: 22px; line-height: 32px; }
+	.sce-scope .sce-fp__card--sm .sce-fp__name { font-size: 20px; line-height: 30px; }
+	.sce-scope .sce-fp__card--sm .sce-fp__label { font-size: 9px; line-height: 13.5px; letter-spacing: 0.9px; }
+}
+
+@media (max-width: 400px) {
+	.sce-fp { --sce-shell-pad: 20px; }
+	.sce-scope .sce-fp__title { font-size: 23px; }
+}

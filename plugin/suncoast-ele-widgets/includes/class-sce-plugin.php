@@ -51,10 +51,47 @@ final class SCE_Plugin {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-header.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-banner.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-benefits.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-projects.php';
 
 		$widgets_manager->register( new SCE_Widget_Header() );
 		$widgets_manager->register( new SCE_Widget_Banner() );
 		$widgets_manager->register( new SCE_Widget_Benefits() );
+		$widgets_manager->register( new SCE_Widget_Projects() );
+	}
+
+
+	/**
+	 * Split a heading on <br> so every line gets its own masked reveal.
+	 *
+	 * Shared by the banner, benefits and projects widgets so the markup and
+	 * the allowed inline tags stay identical across them.
+	 *
+	 * @param string $text Raw control value.
+	 * @param int    $base First line's delay in ms.
+	 * @param int    $step Added per subsequent line.
+	 * @return string
+	 */
+	public static function reveal_lines( $text, $base = 120, $step = 90 ) {
+		$allow = array(
+			'em'     => array(),
+			'i'      => array(),
+			'strong' => array(),
+			'b'      => array(),
+			'span'   => array( 'class' => array() ),
+		);
+		$out = '';
+		foreach ( preg_split( '#<\s*br\s*/?\s*>#i', (string) $text ) as $i => $line ) {
+			$line = trim( $line );
+			if ( '' === $line ) {
+				continue;
+			}
+			$out .= sprintf(
+				'<span class="sce-rvline" style="--sce-rv-d:%dms"><span>%s</span></span>',
+				(int) ( $base + ( $i * $step ) ),
+				wp_kses( $line, $allow )
+			);
+		}
+		return $out;
 	}
 
 	/**

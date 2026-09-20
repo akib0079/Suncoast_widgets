@@ -852,7 +852,7 @@ class SCE_Widget_Benefits extends Widget_Base {
 					esc_attr( $tag ),
 					'yes' === $s['accent_italic'] ? ' sce-ben__title--italic' : ''
 				);
-				echo self::lines( $s['title'], 120, 90 ); // phpcs:ignore WordPress.Security.EscapeOutput
+				echo SCE_Plugin::reveal_lines( $s['title'], 120, 90 ); // phpcs:ignore WordPress.Security.EscapeOutput
 				printf( '</%s>', esc_attr( $tag ) );
 				?>
 			<?php endif; ?>
@@ -1065,37 +1065,6 @@ class SCE_Widget_Benefits extends Widget_Base {
 			esc_attr( $paths[ $key ]['vb'] ),
 			esc_attr( $paths[ $key ]['d'] )
 		);
-	}
-
-	/**
-	 * Split on <br> so every line gets its own masked reveal.
-	 *
-	 * @param string $text  Raw control value.
-	 * @param int    $base  First line's delay in ms.
-	 * @param int    $step  Added per subsequent line.
-	 * @return string
-	 */
-	private static function lines( $text, $base = 120, $step = 90 ) {
-		$allow = array(
-			'em'     => array(),
-			'i'      => array(),
-			'strong' => array(),
-			'b'      => array(),
-			'span'   => array( 'class' => array() ),
-		);
-		$out = '';
-		foreach ( preg_split( '#<\s*br\s*/?\s*>#i', $text ) as $i => $line ) {
-			$line = trim( $line );
-			if ( '' === $line ) {
-				continue;
-			}
-			$out .= sprintf(
-				'<span class="sce-rvline" style="--sce-rv-d:%dms"><span>%s</span></span>',
-				(int) ( $base + ( $i * $step ) ),
-				wp_kses( $line, $allow )
-			);
-		}
-		return $out;
 	}
 
 	/**

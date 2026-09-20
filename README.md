@@ -8,6 +8,7 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 | **Suncoast Header** | Sticky blurred navbar — logo, scroll-spy nav, phone, CTA, mobile panel |
 | **Suncoast Hero Banner** | Hero photo + content column + lead form card + marquee strip |
 | **Suncoast Benefits + Video** | Centred heading, three-up benefit grid, video teaser with a popup player |
+| **Suncoast Featured Projects** | Split heading row over a 658/400 feature row and a four-up project grid |
 
 ---
 
@@ -34,7 +35,10 @@ Rebuild the zip after any source change:
 3. Drop **Suncoast Benefits + Video** into the section after that — full width,
    `0` padding, since the widget paints its own `#FCFBF4` background and holds
    its own 1070px content column.
-4. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
+4. Drop **Suncoast Featured Projects** after it. This one is **white**, not
+   cream, and the design gives it **no top padding** — the cream section above
+   supplies the separation. Set *Section → Padding top* if you ever use it alone.
+5. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
    matching the header's menu links. Scroll-spy and smooth scrolling pick them
    up automatically.
 
@@ -52,6 +56,7 @@ plugin/suncoast-ele-widgets/     the WordPress plugin (this is what ships)
     widgets/class-sce-widget-header.php
     widgets/class-sce-widget-banner.php
     widgets/class-sce-widget-benefits.php
+    widgets/class-sce-widget-projects.php
   assets/css|js/                 the hard-scoped CSS + vanilla JS
   templates/email-admin.php      admin notification e-mail
 
@@ -154,6 +159,37 @@ Cards measure 340.67 wide with 24px gaps (1070 total), radius 16, background
 export rather than eyeballed. The overlay alpha was solved by least-squares
 against the original poster image.
 
+### Featured Projects
+
+Also scanned 1:1 from the export and re-measured until it matched:
+
+| Element        | Figma | Built | Δ |
+|----------------|-------|-------|---|
+| Section height | 893   | 893   | 0 |
+| Sub-heading    | 0     | 0     | 0 |
+| Heading        | 26.3  | 26.0  | −0.3 |
+| Feature row    | 155   | 155   | 0 |
+| Four-up row    | 567   | 567   | 0 |
+
+Feature row is 658 + 12 + 400, the four-up row 4 × 255.5 with 16px gaps, rows
+12px apart, radius 20, arrow ⌀34 inset 24 from the bottom-right. Background is
+`#FFFFFF`. The heading mixes two faces inside one line — Poppins Bold 32 in
+`#000000` with a Playfair Display accent in `#EBB04D`.
+
+Rows use `aspect-ratio` rather than fixed heights (658/400, 400/400, 255.5/288)
+so the proportions survive any container width.
+
+Two things the measurement caught that eyeballing would not:
+
+- The intro column needs **338px**, not the Figma-exact 334: line one measures
+  334.2px, so a 334px column wrapped it to three lines. The 4px of slack costs
+  4px of horizontal position and buys a wrap that survives Windows font
+  rasterisation.
+- The Playfair accent inflated line two's box by 2px, because its ascent metric
+  (1.082em) is taller than Poppins' (1.05em) and the line box takes the union.
+  `line-height: 1` on the accent hands the strut back control; Playfair's actual
+  ink (≤0.75em) never reaches the strut's headroom, so nothing clips.
+
 Also verified: no horizontal overflow at 1440 / 768 / 375, no console errors,
 all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
 
@@ -203,8 +239,15 @@ all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
 - Grid is 3-up above 992px and single-column below, with the image crop moving
   340/284 → 16/9 → 4/3 so it never becomes a tower on a phone.
 
+**Featured Projects**
+- Whole card is the link; image scales and the arrow fills gold on hover/focus.
+- Both rows are repeaters, and the feature row's columns are a free-text
+  `grid-template-columns` control, so the 658/400 split is not hard-coded.
+- 860px and below: feature row stacks, four-up halves, then single column at
+  600px with the crops moving to 16/9 and 16/10.
+
 **Performance**
-- No libraries. Three small vanilla modules, deferred.
+- No libraries. Four small vanilla modules, deferred.
 - Assets are registered, never globally enqueued — a page using neither widget
   downloads none of this. Three font families, only the weights in use.
 - Scroll/resize handlers are rAF-throttled and passive; animation is
