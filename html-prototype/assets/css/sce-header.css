@@ -337,7 +337,7 @@
 .sce-scope .sce-header__scrim {
 	position: fixed;
 	inset: 0;
-	z-index: calc(var(--sce-hdr-z) - 2);
+	z-index: calc(var(--sce-hdr-z) + 1);
 	background-color: var(--sce-hdr-scrim);
 	opacity: 0;
 	visibility: hidden;
@@ -356,7 +356,7 @@
 	top: 0;
 	right: 0;
 	bottom: 0;
-	z-index: calc(var(--sce-hdr-z) - 1);
+	z-index: calc(var(--sce-hdr-z) + 2);
 	display: flex;
 	flex-direction: column;
 	width: min(var(--sce-hdr-panel-w), 100vw);
@@ -382,7 +382,7 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	min-height: 64px;
+	min-height: var(--sce-hdr-h);
 	margin-inline: -20px;
 	padding-inline: 20px;
 }

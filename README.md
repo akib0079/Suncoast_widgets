@@ -167,8 +167,13 @@ all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
 - Smooth scroll lands each section exactly `bar height + 12px` from the top;
   the gap is a control, and `scroll-padding-top` is kept in sync for deep links.
 - Mobile panel: locks body scroll at the exact offset and restores it, traps Tab
-  both directions, closes on Escape / scrim, returns focus to the burger, and is
-  `inert` + `aria-hidden` while closed.
+  both directions, closes on Escape / scrim / close button, returns focus to the
+  burger, and is `inert` + `aria-hidden` while closed.
+- The panel stacks **above** the bar (bar 9990 → scrim 9991 → panel 9992), so its
+  own top row (logo + ×) replaces the bar while open, matching the Figma mock.
+  Getting this backwards hides the close button behind the bar; verified with a
+  real `elementFromPoint` hit test rather than a rect check, because
+  `getClientRects()` still reports occluded elements as visible.
 - ≤1024px the nav swaps for the burger and the phone collapses to an icon
   button; ≤600px the CTA moves into the panel.
 - Optional auto-hide on scroll-down, and an "overlay the next section" switch.
