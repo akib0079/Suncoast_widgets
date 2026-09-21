@@ -347,3 +347,13 @@
 	.sce-faq { --sce-shell-pad: 20px; }
 	.sce-scope .sce-faq__title { font-size: 24px; }
 }
+
+.sce-scope button.sce-faq__q:is(:hover, :focus, :active) {
+ background: transparent;
+ color: var(--sce-faq-ink);
+ border: 0;
+}
+.sce-scope button.sce-faq__q:focus-visible {
+ outline: 2px solid var(--sce-gold);
+ outline-offset: -2px;
+}

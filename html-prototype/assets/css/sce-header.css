@@ -541,3 +541,16 @@
    Elementor editor: the bar would otherwise cover the panel's drop zone
    -------------------------------------------------------------------------- */
 .elementor-editor-active .sce-header__layer.is-hidden .sce-header__bar { transform: none; }
+
+/* Explicit states beat theme button:hover / button:focus paint on touch. */
+.sce-scope button.sce-header__burger:is(:hover, :focus, :active),
+.sce-scope button.sce-header__close:is(:hover, :focus, :active) {
+ background: transparent;
+ color: var(--sce-hdr-burger-color);
+ border: 0;
+}
+.sce-scope button.sce-header__burger:focus-visible,
+.sce-scope button.sce-header__close:focus-visible {
+ outline: 2px solid var(--sce-gold);
+ outline-offset: 3px;
+}

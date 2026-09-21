@@ -56,6 +56,7 @@ final class SCE_Plugin {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-path.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-grid.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-difference.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-transform.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-faq.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-cta.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-footer.php';
@@ -68,6 +69,7 @@ final class SCE_Plugin {
 		$widgets_manager->register( new SCE_Widget_Path() );
 		$widgets_manager->register( new SCE_Widget_Grid() );
 		$widgets_manager->register( new SCE_Widget_Difference() );
+		$widgets_manager->register( new SCE_Widget_Transform() );
 		$widgets_manager->register( new SCE_Widget_Faq() );
 		$widgets_manager->register( new SCE_Widget_Cta() );
 		$widgets_manager->register( new SCE_Widget_Footer() );

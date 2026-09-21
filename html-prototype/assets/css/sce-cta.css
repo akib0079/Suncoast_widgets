@@ -232,3 +232,5 @@
 @media (max-width: 400px) {
 	.sce-cta { --sce-shell-pad: 20px; }
 }
+
+.sce-scope .sce-cta__btn { max-width: 100%; white-space: normal; }

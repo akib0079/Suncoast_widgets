@@ -3,7 +3,7 @@
  * Plugin Name:       Suncoast Ele Widgets
  * Plugin URI:        https://suncoastenclosures.com/
  * Description:       Pixel-perfect Elementor widgets for the Suncoast Enclosures landing page — sticky blurred header and hero banner with lead form + marquee. All CSS is hard-scoped so the active theme cannot bleed into it.
- * Version:           1.1.0
+ * Version:           1.2.1
  * Author:            Avix Digital Agency
  * Text Domain:       suncoast-ele-widgets
  * Requires at least: 6.0
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SCE_VERSION', '1.1.0' );
+define( 'SCE_VERSION', '1.2.1' );
 define( 'SCE_FILE', __FILE__ );
 define( 'SCE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SCE_URL', plugin_dir_url( __FILE__ ) );

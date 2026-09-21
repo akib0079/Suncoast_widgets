@@ -267,3 +267,7 @@
 @media (max-width: 400px) {
 	.sce-footer { --sce-shell-pad: 20px; }
 }
+
+.sce-scope .sce-footer__rule { transform: scaleX(1); }
+.sce-scope .sce-footer__cta { max-width: 100%; white-space: normal; }
+.sce-scope .sce-footer__logo { max-width: 100%; }

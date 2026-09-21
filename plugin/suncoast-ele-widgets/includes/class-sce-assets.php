@@ -70,6 +70,7 @@ final class SCE_Assets {
 		wp_register_style( 'sce-path', $css . 'sce-path.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-grid', $css . 'sce-grid.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-diff', $css . 'sce-diff.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-transform', $css . 'sce-transform.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-faq', $css . 'sce-faq.css', array( 'sce-form' ), SCE_VERSION );
 		wp_register_style( 'sce-cta', $css . 'sce-cta.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-footer', $css . 'sce-footer.css', $base, SCE_VERSION );

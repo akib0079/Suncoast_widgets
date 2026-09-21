@@ -1,0 +1,296 @@
+/* ==========================================================================
+   Suncoast — Transform widget (info left, photo right)
+   Figma (read off the section screenshots at ~0.88 scale, so these are
+   accurate to a couple of px rather than sub-pixel; bg #FCFBF4):
+
+     section  1280 x 780, container 1072, padding 61 top / 120 bottom
+     columns  429 / 643, no gap — the photo is flush to the container's
+              right edge and the text never reaches it
+     photo    643 x 599, radius 8
+     eyebrow  Poppins 400 10/15 ls 2.6 #EBB04D uppercase      (6 below)
+     heading  Poppins 600 48 #1A1C1C + "It." in #EBB04D
+              Figma records line-height 24 against a 48px face, which would
+              overlap the moment it wraps — 1.2 here, absorbed in the margins
+     item     title Poppins 600 14/16.5 ls -4% #1A1C1C uppercase
+              desc  Poppins 400 13/19.5 #444748              (6 below title)
+              row pitch 65, i.e. a 23px gap between items
+     button   ~190 x 48, #EBB04D, Poppins 600 13 ls .65 uppercase
+
+   The text column is vertically centred against the photo, not against the
+   section — that is what the 61/120 padding pair produces.
+
+   Note the first breakpoint is 1180, not the project's usual 1280: this
+   section's Figma frame IS 1280 wide (1072 + 104 gutters), so a 1280 query
+   would fire at exactly the design width.
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-tf {
+	/* ---- tunables (each one maps to an Elementor control) ---- */
+	--sce-tf-bg: #FCFBF4;
+	--sce-tf-max: 1072px;
+	--sce-tf-pad-top: 61px;
+	--sce-tf-pad-bottom: 120px;
+
+	--sce-tf-cols: 429fr 643fr;
+	--sce-tf-gap: 0px;
+
+	--sce-tf-media-h: 599px;
+	--sce-tf-media-radius: 8px;
+
+	--sce-tf-eyebrow-mb: 6px;
+	--sce-tf-title-mb: 42px;
+	--sce-tf-row-gap: 23px;
+	--sce-tf-item-gap: 6px;
+	--sce-tf-list-mb: 30px;
+
+	--sce-tf-title-size: clamp(30px, 3.75vw, 48px); /* 48 at the 1280 frame */
+	--sce-tf-title-lh: 1.2;
+
+	--sce-tf-ink: var(--sce-ink-2);
+	--sce-tf-muted: #444748;
+
+	--sce-tf-btn-bg: var(--sce-gold);
+	--sce-tf-btn-bg-hover: #F2BE63;
+	--sce-tf-btn-ink: var(--sce-ink-2);
+	--sce-tf-btn-radius: 6px;
+	--sce-tf-btn-h: 48px;
+
+	--sce-tf-tick: 16px;
+}
+
+.sce-scope.sce-tf {
+	position: relative;
+	background-color: var(--sce-tf-bg);
+	padding-block: var(--sce-tf-pad-top) var(--sce-tf-pad-bottom);
+}
+
+.sce-scope .sce-tf__inner {
+	width: 100%;
+	max-width: calc(var(--sce-tf-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+.sce-scope .sce-tf__grid {
+	display: grid;
+	grid-template-columns: var(--sce-tf-cols);
+	gap: var(--sce-tf-gap);
+	align-items: center;
+}
+
+/* Photo left / text right, without moving the text out of source order. */
+.sce-scope.sce-tf--media-left .sce-tf__col { order: 2; }
+.sce-scope.sce-tf--media-left .sce-tf__media { order: 1; }
+
+/* --------------------------------------------------------------------------
+   Text column
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-tf__col { min-width: 0; }
+
+.sce-scope .sce-tf__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-tf-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-tf__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-tf-title-mb);
+	font-family: var(--sce-font-ui);
+	font-size: var(--sce-tf-title-size);
+	font-weight: 600;
+	line-height: var(--sce-tf-title-lh);
+	letter-spacing: 0;
+	color: var(--sce-tf-ink);
+}
+.sce-scope .sce-tf__title em {
+	font-style: normal;
+	font-weight: 600;
+	color: var(--sce-gold);
+}
+
+/* --------------------------------------------------------------------------
+   Feature list
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-tf__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sce-tf-row-gap);
+	margin-bottom: var(--sce-tf-list-mb);
+}
+
+.sce-scope .sce-tf__item {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	column-gap: 12px;
+	align-items: start;
+}
+
+.sce-scope .sce-tf__tick {
+	grid-row: 1 / span 2;
+	flex: none;
+	width: var(--sce-tf-tick);
+	height: var(--sce-tf-tick);
+	/* nudged onto the title's cap line rather than its line box */
+	margin-top: 1px;
+	color: var(--sce-gold);
+	transition: transform 0.45s var(--sce-ease-spring);
+}
+.sce-scope .sce-tf__item:hover .sce-tf__tick { transform: scale(1.16) rotate(-8deg); }
+
+.sce-scope .sce-tf__name {
+	display: block;
+	margin-bottom: var(--sce-tf-item-gap);
+	font-family: var(--sce-font-ui);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 16.5px;
+	letter-spacing: -0.04em;
+	text-transform: uppercase;
+	color: var(--sce-tf-ink);
+}
+
+.sce-scope .sce-tf__desc {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	color: var(--sce-tf-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Button
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-tf__btn {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	min-height: var(--sce-tf-btn-h);
+	padding: 14px 24px;
+	border-radius: var(--sce-tf-btn-radius);
+	background-color: var(--sce-tf-btn-bg);
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.05em; /* .65px @ 13px */
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--sce-tf-btn-ink);
+	transition:
+		transform 0.4s var(--sce-ease-expo),
+		box-shadow 0.4s var(--sce-ease),
+		background-color 0.4s var(--sce-ease);
+}
+.sce-scope .sce-tf__btn::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.55) 48%, transparent 64%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+	pointer-events: none;
+}
+.sce-scope .sce-tf__btn:hover,
+.sce-scope .sce-tf__btn:focus-visible {
+	background-color: var(--sce-tf-btn-bg-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 12px 26px -10px rgba(199, 140, 40, 0.6);
+}
+.sce-scope .sce-tf__btn:hover::after,
+.sce-scope .sce-tf__btn:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-tf__btn:active { transform: translateY(0); }
+.sce-scope .sce-tf__btn svg { width: 12px; height: 12px; }
+
+/* --------------------------------------------------------------------------
+   Photo
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-tf__media {
+	position: relative;
+	min-width: 0;
+	overflow: hidden;
+	border-radius: var(--sce-tf-media-radius);
+	/* paints before the photo decodes, so the column never collapses */
+	background-color: #ECE7DC;
+}
+
+.sce-scope .sce-tf__img {
+	display: block;
+	width: 100%;
+	height: var(--sce-tf-media-h);
+	object-fit: cover;
+	object-position: center;
+	/* a slow settle on entry — the still photo is the hero of this section */
+	transform: scale(1.05);
+	transition: transform 1.4s var(--sce-ease-expo);
+}
+.sce-scope.is-revealed .sce-tf__img { transform: scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope .sce-tf__img { transform: none; transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+	.sce-tf {
+		--sce-shell-pad: 40px;
+		--sce-tf-cols: 400fr 600fr;
+		--sce-tf-gap: 32px;
+		--sce-tf-media-h: 540px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.sce-tf {
+		--sce-shell-pad: 32px;
+		--sce-tf-cols: minmax(0, 1fr);
+		--sce-tf-gap: 44px;
+		--sce-tf-pad-top: 72px;
+		--sce-tf-pad-bottom: 72px;
+		--sce-tf-media-h: 460px;
+		--sce-tf-title-mb: 34px;
+	}
+	/* single column: the copy leads, the photo closes */
+	.sce-scope .sce-tf__col { order: 1; }
+	.sce-scope .sce-tf__media { order: 2; }
+	.sce-scope.sce-tf--media-left .sce-tf__col { order: 1; }
+	.sce-scope.sce-tf--media-left .sce-tf__media { order: 2; }
+}
+
+@media (max-width: 600px) {
+	.sce-tf {
+		--sce-shell-pad: 24px;
+		--sce-tf-gap: 36px;
+		--sce-tf-pad-top: 56px;
+		--sce-tf-pad-bottom: 56px;
+		--sce-tf-media-h: 340px;
+		--sce-tf-row-gap: 20px;
+		--sce-tf-list-mb: 26px;
+	}
+	.sce-scope .sce-tf__btn { width: 100%; }
+}
+
+@media (max-width: 400px) {
+	.sce-tf { --sce-shell-pad: 20px; --sce-tf-media-h: 290px; }
+}
+
+.sce-scope .sce-tf__name,
+.sce-scope .sce-tf__desc { grid-column: 2; }
+.sce-scope .sce-tf__btn { max-width: 100%; white-space: normal; }

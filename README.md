@@ -13,6 +13,7 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 | **Suncoast Testimonials + Path** | Cross-fading testimonial slider beside a numbered path that advances itself |
 | **Suncoast Make It Yours** | Cream section — heading over a six-up grid of white icon cards |
 | **Suncoast Difference** | Dark compare band — heading + button beside two columns of feature pairs |
+| **Suncoast Transform** | Two columns — eyebrow, heading, ticked feature list and button beside a photo |
 | **Suncoast FAQ & Form** | Dark lead-capture card beside an accordion of common questions |
 | **Suncoast Call to Action** | Full-bleed photo close — centred heading, sub-copy, buttons |
 | **Suncoast Footer** | Logo, phone block and outlined CTA over a divider and link row |
@@ -46,8 +47,9 @@ Rebuild the zip after any source change:
    cream, and the design gives it **no top padding** — the cream section above
    supplies the separation. Set *Section → Padding top* if you ever use it alone.
 5. Drop the remaining widgets in order: **Benefits Band**, **Testimonials +
-   Path**, **Make It Yours**, **Difference**, **FAQ & Form**, **Call to
-   Action**, **Footer** — each in its own full-width section with `0` padding.
+   Path**, **Make It Yours**, **Difference**, **Transform**, **FAQ & Form**,
+   **Call to Action**, **Footer** — each in its own full-width section with
+   `0` padding.
 6. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
    matching the header's menu links. Scroll-spy and smooth scrolling pick them
    up automatically. The FAQ widget sets its own `#quote` anchor, so every
@@ -241,6 +243,36 @@ Two things the measurement caught that eyeballing would not:
   (1.082em) is taller than Poppins' (1.05em) and the line box takes the union.
   `line-height: 1` on the accent hands the strut back control; Playfair's actual
   ink (≤0.75em) never reaches the strut's headroom, so nothing clips.
+
+### Transform
+
+Container, columns and photo land exactly: content 1072, columns **429 / 643**
+with no gap, photo **643 × 599** flush to the container's right edge, section
+**780** tall. Every type value matches the Figma panels — eyebrow Poppins 10/15
+ls 2.6, heading 48, feature title 14/16.5 ls −4%, description 13/19.5 — and the
+row pitch is 65.
+
+Vertical positions are within **~2px**. Worth saying plainly: unlike the other
+sections, this one was read off screenshots at roughly 0.88 scale rather than a
+1:1 export, so ±2px is the honest tolerance here, not ±0.5.
+
+Three things the measurement settled:
+
+- **Figma records `line-height: 24` against a 48px face.** As written the lines
+  would overlap the moment the heading wrapped. The build uses 1.2 and absorbs
+  the difference in the surrounding margins, same as the benefits heading.
+- **The columns overlap in the Figma file.** The text frames are 573 wide while
+  the photo starts at 429 from the container's left edge. Nothing overlaps
+  visually — the longest line is 283px — so the build uses the honest
+  `429 / 643` split, which also guarantees the copy can never run under the
+  photo at any width.
+- **The first breakpoint is 1180, not the project's usual 1280.** This
+  section's Figma frame *is* 1280 wide (1072 + 104 gutters), so a 1280 query
+  would fire at exactly the design width and shrink the gutter off its mark.
+  The heading clamp caps at `3.75vw` for the same reason — 48px lands at 1280.
+
+The text column is vertically centred against the photo rather than the
+section, which is what the asymmetric 61/120 padding pair produces.
 
 ### FAQ & Form
 
@@ -462,3 +494,15 @@ add_action( 'sce/lead_submitted', function ( $lead_id, $fields, $meta ) { /* CRM
     matching the Figma's 192px heading box. The photo drifts from `scale(1.06)`
     to `1` once the section enters view, and holds still under
     `prefers-reduced-motion`.
+
+## 1.2.1 — mobile layout and visibility fixes
+
+- Includes the editable Transform widget and supplied default photo.
+- Prevents theme hover/focus backgrounds from painting hamburger, close and FAQ buttons; retains keyboard focus outlines.
+- Stretches project cards to their grid tracks, with full-width mobile cards.
+- Makes reveal content visible by default, including when JavaScript is disabled or delayed; keeps desktop entrance animation.
+- Allows CTA/footer/Transform button labels to wrap and corrects optional Transform feature placement and link attributes.
+
+Validation: PHP lint, JavaScript syntax checks, selector/settings audit and ZIP integrity passed. Chromium prototype checks at 320, 375, 430, 768, 1024 and 1440px found no page overflow or hidden CTA/footer/Transform content. Mobile menu open/close and FAQ interaction passed with injected theme button states. CTA/footer remained visible with JavaScript disabled. Live WordPress/Elementor activation and physical iOS Safari testing were not performed for this release.
+
+After replacing the plugin, regenerate Elementor CSS/data and clear site/CDN/browser caches so old CSS does not mask the fixes.

@@ -318,3 +318,14 @@ a.sce-fp__card:focus-visible .sce-fp__arrow {
 	.sce-fp { --sce-shell-pad: 20px; }
 	.sce-scope .sce-fp__title { font-size: 23px; }
 }
+
+/* Explicit stretch also works inside Elementor's flex containers and Safari. */
+.sce-scope .sce-fp__row > .sce-fp__card {
+ width: 100%;
+ max-width: 100%;
+ justify-self: stretch;
+}
+@media (max-width: 600px) {
+ .sce-scope .sce-fp__row { grid-template-columns: minmax(0, 1fr); }
+ .sce-scope .sce-fp__row > .sce-fp__card { min-height: 220px; }
+}

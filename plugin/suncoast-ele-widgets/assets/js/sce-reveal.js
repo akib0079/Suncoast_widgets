@@ -9,7 +9,7 @@
 (function (w, d) {
 	"use strict";
 
-	var ROOTS = ".sce-my, .sce-diff, .sce-cta, .sce-footer";
+	var ROOTS = ".sce-my, .sce-diff, .sce-tf, .sce-cta, .sce-footer";
 	var REDUCED = w.matchMedia && w.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 	function fontsReady() {
@@ -93,7 +93,7 @@
 	/* ---- Elementor editor: re-init whenever either widget is rendered ---- */
 	w.addEventListener("elementor/frontend/init", function () {
 		if (!w.elementorFrontend || !w.elementorFrontend.hooks) return;
-		["suncoast_grid", "suncoast_difference", "suncoast_cta", "suncoast_footer"].forEach(function (name) {
+		["suncoast_grid", "suncoast_difference", "suncoast_transform", "suncoast_cta", "suncoast_footer"].forEach(function (name) {
 			w.elementorFrontend.hooks.addAction(
 				"frontend/element_ready/" + name + ".default",
 				function ($scope) {
