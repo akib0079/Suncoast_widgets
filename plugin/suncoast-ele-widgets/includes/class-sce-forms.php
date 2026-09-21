@@ -125,6 +125,7 @@ final class SCE_Forms {
 			'zip'          => sanitize_text_field( wp_unslash( $_POST['zip'] ?? '' ) ),
 			'project_type' => sanitize_text_field( wp_unslash( $_POST['project_type'] ?? '' ) ),
 			'email'        => sanitize_email( wp_unslash( $_POST['email'] ?? '' ) ),
+			'message'      => sanitize_textarea_field( wp_unslash( $_POST['message'] ?? '' ) ),
 		);
 
 		if ( '' === $fields['name'] || '' === $fields['phone'] ) {
@@ -190,6 +191,7 @@ final class SCE_Forms {
 		update_post_meta( $id, '_sce_zip', $fields['zip'] );
 		update_post_meta( $id, '_sce_project_type', $fields['project_type'] );
 		update_post_meta( $id, '_sce_email', $fields['email'] );
+		update_post_meta( $id, '_sce_message', $fields['message'] );
 		update_post_meta( $id, '_sce_source', $meta['source'] );
 		update_post_meta( $id, '_sce_ip', $meta['ip'] );
 		update_post_meta( $id, '_sce_ua', $meta['ua'] );

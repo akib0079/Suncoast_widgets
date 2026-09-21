@@ -8,7 +8,7 @@
  *
  * @package SuncoastEleWidgets
  *
- * @var array $fields name, phone, zip, project_type, email
+ * @var array $fields name, phone, zip, project_type, email, message
  * @var array $meta   source, page, ip, ua, time, referer
  */
 
@@ -18,6 +18,8 @@ $sce_gold  = '#EBB04D';
 $sce_ink   = '#1A1C1C';
 $sce_muted = '#6B7280';
 $sce_line  = '#E8E6E1';
+
+$sce_message = isset( $fields['message'] ) ? (string) $fields['message'] : '';
 
 $sce_rows = array(
 	__( 'Name', 'suncoast-ele-widgets' )         => $fields['name'],
@@ -97,6 +99,18 @@ $sce_rows = array(
 							</td>
 						</tr>
 					<?php endforeach; ?>
+					<?php if ( '' !== $sce_message ) : ?>
+						<tr>
+							<td colspan="2" style="padding:16px 0 0;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:<?php echo esc_attr( $sce_muted ); ?>;">
+								<?php esc_html_e( 'Message', 'suncoast-ele-widgets' ); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" style="padding:8px 0 11px;border-bottom:1px solid <?php echo esc_attr( $sce_line ); ?>;font-size:14px;line-height:1.55;color:<?php echo esc_attr( $sce_ink ); ?>;">
+								<?php echo nl2br( esc_html( $sce_message ) ); ?>
+							</td>
+						</tr>
+					<?php endif; ?>
 				</table>
 			</td>
 		</tr>

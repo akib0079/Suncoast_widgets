@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Suncoast — Footer widget
+   Figma (measured 1:1 from the export; fill #181818):
+
+     band     1440 x ~234, container 1072, padding 52 top / 51 bottom
+     top row  logo (left) · phone block (centre) · outlined CTA (right)
+              ink box ~52 tall
+     divider  1px rgba(255,255,255,.12)
+     bottom   nav links (left) · legal (right), ink 172-179 — the row gap
+              and rule margin below are what land that ink band
+              Poppins 400 11/16.5 rgba(229,229,229,.66)
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-footer {
+	/* ---- tunables (each one maps to an Elementor control) ---- */
+	--sce-ftr-bg: #181818;
+	--sce-ftr-max: 1072px;
+	--sce-ftr-pad-top: 52px;
+	--sce-ftr-pad-bottom: 51px;
+
+	--sce-ftr-logo-h: 52px;
+	--sce-ftr-row-gap: 35px;
+	--sce-ftr-rule: rgba(255, 255, 255, 0.12);
+	--sce-ftr-rule-mb: 27px;
+
+	--sce-ftr-ink: rgba(229, 229, 229, 0.66);
+	--sce-ftr-ink-hover: var(--sce-white);
+	--sce-ftr-link-gap: 26px;
+
+	--sce-ftr-btn-radius: 4px;
+	--sce-ftr-btn-h: 44px;
+}
+
+.sce-scope.sce-footer {
+	position: relative;
+	background-color: var(--sce-ftr-bg);
+	padding-block: var(--sce-ftr-pad-top) var(--sce-ftr-pad-bottom);
+}
+
+.sce-scope .sce-footer__inner {
+	width: 100%;
+	max-width: calc(var(--sce-ftr-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Top row
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-footer__top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 32px;
+	margin-bottom: var(--sce-ftr-row-gap);
+}
+
+.sce-scope .sce-footer__brand {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+	transition: opacity var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-footer__brand:hover { opacity: 0.82; }
+.sce-scope .sce-footer__logo {
+	display: block;
+	width: auto;
+	height: var(--sce-ftr-logo-h);
+	object-fit: contain;
+}
+/* text fallback when no logo image is set */
+.sce-scope .sce-footer__wordmark {
+	font-family: var(--sce-font-display);
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+	color: var(--sce-white);
+}
+
+.sce-scope .sce-footer__contact {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+.sce-scope .sce-footer__contact-icon {
+	display: grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	border: 1px solid rgba(235, 176, 77, 0.38);
+	color: var(--sce-gold);
+	transition: background-color var(--sce-dur) var(--sce-ease), border-color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-footer__contact-icon svg { width: 15px; height: 15px; }
+.sce-scope .sce-footer__contact:hover .sce-footer__contact-icon {
+	background-color: rgba(235, 176, 77, 0.12);
+	border-color: var(--sce-gold);
+}
+.sce-scope .sce-footer__contact-label {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 1.6px;
+	text-transform: uppercase;
+	color: var(--sce-ftr-ink);
+}
+.sce-scope .sce-footer__contact-value {
+	display: block;
+	font-family: var(--sce-font-ui);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 22px;
+	color: var(--sce-white);
+	transition: color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-footer__contact:hover .sce-footer__contact-value { color: var(--sce-gold); }
+
+.sce-scope .sce-footer__cta {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	flex: 0 0 auto;
+	min-height: var(--sce-ftr-btn-h);
+	padding: 12px 24px;
+	border: 1px solid rgba(235, 176, 77, 0.65);
+	border-radius: var(--sce-ftr-btn-radius);
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 16.5px;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--sce-gold);
+	transition:
+		background-color 0.4s var(--sce-ease),
+		border-color 0.4s var(--sce-ease),
+		color 0.4s var(--sce-ease),
+		transform 0.4s var(--sce-ease-expo);
+}
+.sce-scope .sce-footer__cta:hover,
+.sce-scope .sce-footer__cta:focus-visible {
+	background-color: var(--sce-gold-icon);
+	border-color: var(--sce-gold-icon);
+	color: #000000;
+	transform: translateY(-2px);
+}
+.sce-scope .sce-footer__cta:active { transform: translateY(0); }
+.sce-scope .sce-footer__cta svg { width: 12px; height: 12px; }
+
+/* --------------------------------------------------------------------------
+   Divider + bottom row
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-footer__rule {
+	height: 1px;
+	margin-bottom: var(--sce-ftr-rule-mb);
+	background-color: var(--sce-ftr-rule);
+	/* draws itself in once the footer enters the viewport */
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 1s var(--sce-ease-expo) 0.1s;
+}
+.sce-scope.is-revealed .sce-footer__rule { transform: scaleX(1); }
+
+.sce-scope .sce-footer__bottom {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 14px 32px;
+}
+
+.sce-scope .sce-footer__nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--sce-ftr-link-gap);
+	min-width: 0;
+}
+
+.sce-scope .sce-footer__link {
+	position: relative;
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 400;
+	line-height: 16.5px;
+	letter-spacing: 0.4px;
+	color: var(--sce-ftr-ink);
+	transition: color var(--sce-dur) var(--sce-ease);
+}
+/* underline grows from the left rather than fading — quieter, more precise */
+.sce-scope .sce-footer__link::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -4px;
+	height: 1px;
+	background-color: var(--sce-gold);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.42s var(--sce-ease-expo);
+}
+.sce-scope .sce-footer__link:hover,
+.sce-scope .sce-footer__link:focus-visible { color: var(--sce-ftr-ink-hover); }
+.sce-scope .sce-footer__link:hover::after,
+.sce-scope .sce-footer__link:focus-visible::after { transform: scaleX(1); }
+
+.sce-scope .sce-footer__legal {
+	font-family: var(--sce-font-ui);
+	font-size: 11px;
+	font-weight: 400;
+	line-height: 16.5px;
+	letter-spacing: 0.4px;
+	color: var(--sce-ftr-ink);
+}
+.sce-scope .sce-footer__legal a { color: inherit; text-decoration: underline; }
+.sce-scope .sce-footer__legal a:hover { color: var(--sce-ftr-ink-hover); }
+
+/* --------------------------------------------------------------------------
+   Reveal
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope .sce-footer__rule { transform: scaleX(1); transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-footer { --sce-shell-pad: 40px; --sce-ftr-link-gap: 20px; }
+}
+
+@media (max-width: 1024px) {
+	.sce-footer { --sce-shell-pad: 32px; --sce-ftr-row-gap: 28px; }
+	.sce-scope .sce-footer__top { flex-wrap: wrap; gap: 24px 28px; }
+	.sce-scope .sce-footer__cta { margin-left: auto; }
+}
+
+@media (max-width: 720px) {
+	.sce-footer {
+		--sce-shell-pad: 24px;
+		--sce-ftr-pad-top: 44px;
+		--sce-ftr-pad-bottom: 40px;
+		--sce-ftr-logo-h: 46px;
+	}
+	.sce-scope .sce-footer__top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 22px;
+	}
+	.sce-scope .sce-footer__cta { width: 100%; margin-left: 0; }
+	.sce-scope .sce-footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+	.sce-scope .sce-footer__nav { gap: 14px 20px; }
+}
+
+@media (max-width: 400px) {
+	.sce-footer { --sce-shell-pad: 20px; }
+}

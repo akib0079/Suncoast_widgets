@@ -56,6 +56,9 @@ final class SCE_Plugin {
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-path.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-grid.php';
 		require_once SCE_PATH . 'includes/widgets/class-sce-widget-difference.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-faq.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-cta.php';
+		require_once SCE_PATH . 'includes/widgets/class-sce-widget-footer.php';
 
 		$widgets_manager->register( new SCE_Widget_Header() );
 		$widgets_manager->register( new SCE_Widget_Banner() );
@@ -65,14 +68,17 @@ final class SCE_Plugin {
 		$widgets_manager->register( new SCE_Widget_Path() );
 		$widgets_manager->register( new SCE_Widget_Grid() );
 		$widgets_manager->register( new SCE_Widget_Difference() );
+		$widgets_manager->register( new SCE_Widget_Faq() );
+		$widgets_manager->register( new SCE_Widget_Cta() );
+		$widgets_manager->register( new SCE_Widget_Footer() );
 	}
 
 
 	/**
 	 * Split a heading on <br> so every line gets its own masked reveal.
 	 *
-	 * Shared by the banner, benefits and projects widgets so the markup and
-	 * the allowed inline tags stay identical across them.
+	 * Shared by every widget with a display heading so the markup and the
+	 * allowed inline tags stay identical across them.
 	 *
 	 * @param string $text Raw control value.
 	 * @param int    $base First line's delay in ms.

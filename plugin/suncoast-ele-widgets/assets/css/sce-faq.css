@@ -1,0 +1,349 @@
+/* ==========================================================================
+   Suncoast — FAQ & Form widget
+   Figma (measured 1:1 from the export; section fill #FFFFFF):
+
+     container 1072, padding 112 top / 112 bottom
+     columns   445 (dark form card) / 585 (FAQ) with a 42px gap
+
+     CARD  445 x 690, radius 3, #1A1A1A, padding 39/40/40 — the height is
+           39 + 70 + 8 + 19.5 + 14.5 + 433.5 + 15.5 + 50 + 40, i.e. a 2-line
+           title, a single-line sub and five labelled fields
+           title    Playfair 400 28/35 #FFFFFF          (2 lines -> 70)
+           sub      Poppins  400 13/19.5 #E5E5E5        (8 below the title)
+           label    Poppins  400 9/13.5 ls .9 #E5E5E5 @70%
+           field    365.33 x 50, text Poppins 400 13/24 #FFFFFF
+           rhythm   label->field 8, group->group 19, submit 15.5 below
+     FAQ   eyebrow  Poppins  400 10/15 ls 2.6 #EEB75D   (ink top 112)
+           heading  Playfair 400 36/54                  (ink top 136.35, H 108)
+           intro    Poppins  400 12/18 #444748          (ink top 261.2, H 72)
+           eyebrow2 ink top 366  ·  sub-heading Playfair 24/36 ink top 390.85
+           question Poppins  500 14/18 #1A1C1C          (ink top 475.9)
+           answer   Poppins  400 12/21 #444748          (ink top 511.7, H 63)
+           item     border-top 1px, padding 24 block, Q->A gap 18 (pitch 67)
+
+   Field + submit primitives come from sce-form.css; the dark skin is applied
+   here by overriding its custom properties from a 0-2-0 selector.
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-faq {
+	/* ---- tunables (each one maps to an Elementor control) ---- */
+	--sce-faq-bg: var(--sce-white);
+	--sce-faq-max: 1072px;
+	--sce-faq-pad-top: 112px;
+	--sce-faq-pad-bottom: 112px;
+
+	--sce-faq-cols: 445fr 585fr;
+	--sce-faq-gap: 42px;
+
+	/* card */
+	--sce-faq-card-bg: #1A1A1A;
+	--sce-faq-card-radius: 3px;
+	--sce-faq-card-pad: 39px 40px 40px;
+	--sce-faq-card-title-mb: 8px;
+	--sce-faq-card-sub-mb: 14.5px;
+
+	/* FAQ column rhythm. Figma gives text-box tops of 112 / 136.35 / 261.2 /
+	   366 / 390.85 / 475.9 (question, incl. the 1px rule + 24 row padding);
+	   these margins reproduce that stack to within half a pixel, and stay
+	   correct when the copy runs to a different line count. */
+	--sce-faq-eyebrow-mb: 9px;
+	--sce-faq-title-mb: 17px;
+	--sce-faq-intro-mb: 33px;
+	--sce-faq-eyebrow2-mb: 10px;
+	--sce-faq-subtitle-mb: 24px;
+
+	--sce-faq-item-pad: 24px;
+	--sce-faq-qa-gap: 18px;
+	--sce-faq-line: #E4E4E4;
+
+	--sce-faq-ink: var(--sce-ink-2);
+	--sce-faq-muted: #444748;
+}
+
+.sce-scope.sce-faq {
+	position: relative;
+	background-color: var(--sce-faq-bg);
+	padding-block: var(--sce-faq-pad-top) var(--sce-faq-pad-bottom);
+}
+
+.sce-scope .sce-faq__inner {
+	width: 100%;
+	max-width: calc(var(--sce-faq-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+}
+
+.sce-scope .sce-faq__grid {
+	display: grid;
+	grid-template-columns: var(--sce-faq-cols);
+	gap: var(--sce-faq-gap);
+	align-items: start;
+}
+
+/* Figma puts the card first; the widget can flip the pair without touching
+   the source order, so the form still comes first for screen readers. */
+.sce-scope.sce-faq--form-right .sce-faq__aside { order: 2; }
+.sce-scope.sce-faq--form-right .sce-faq__main { order: 1; }
+
+/* --------------------------------------------------------------------------
+   Form card
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-faq__card {
+	min-width: 0;
+	padding: var(--sce-faq-card-pad);
+	border-radius: var(--sce-faq-card-radius);
+	background-color: var(--sce-faq-card-bg);
+	box-shadow: 0 30px 70px -40px rgba(10, 9, 6, 0.55);
+}
+
+.sce-scope .sce-faq__card-title {
+	margin-bottom: var(--sce-faq-card-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 35px;
+	letter-spacing: 0;
+	color: var(--sce-white);
+}
+.sce-scope .sce-faq__card-title em {
+	font-style: italic;
+	font-weight: 400;
+	/* mixed faces on one line: pin the accent so Playfair's taller ascent
+	   cannot inflate the shared line box — see sce-projects.css */
+	line-height: 1;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-faq__card-sub {
+	margin-bottom: var(--sce-faq-card-sub-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 19.5px;
+	color: var(--sce-para);
+}
+
+/* Dark re-skin of the shared form primitives (0-2-0 beats sce-form.css's
+   0-1-0 defaults regardless of stylesheet order). */
+.sce-scope .sce-faq__card .sce-form {
+	--sce-fld-gap: 19px;
+	--sce-fld-block-mb: 15.5px;
+	--sce-fld-h: 50px;
+	--sce-fld-pad-x: 14px;
+	--sce-fld-radius: 2px;
+	--sce-fld-size: 13px;
+	--sce-fld-bg: #232323;
+	--sce-fld-ink: var(--sce-white);
+	--sce-fld-muted: rgba(229, 229, 229, 0.55);
+	--sce-fld-border: rgba(229, 229, 229, 0.18);
+	--sce-fld-border-hover: rgba(229, 229, 229, 0.38);
+
+	--sce-fld-label-size: 9px;
+	--sce-fld-label-weight: 400;
+	--sce-fld-label-lh: 13.5px;
+	--sce-fld-label-ls: 0.1em; /* .9px @ 9px */
+	--sce-fld-label-ink: rgba(229, 229, 229, 0.7);
+
+	--sce-btn-h: 50px;
+	--sce-btn-mb: 0px;
+	--sce-btn-radius: 2px;
+	--sce-btn-size: 11px;
+	--sce-btn-ls: 0.1em;
+	--sce-btn-bg: var(--sce-gold-icon);
+	--sce-btn-bg-hover: #F5C878;
+	--sce-btn-ink: #000000;
+	--sce-btn-sheen: rgba(255, 255, 255, 0.55);
+	--sce-btn-shadow: none;
+	--sce-btn-shadow-hover: 0 12px 26px -10px rgba(199, 140, 40, 0.6);
+
+	--sce-note-ink: rgba(229, 229, 229, 0.6);
+}
+/* the label sits inside the field group, so the 19px gap is group-to-group */
+.sce-scope .sce-faq__card .sce-form__field { display: block; }
+.sce-scope .sce-faq__card .sce-form__note { margin-top: 14px; }
+.sce-scope .sce-faq__card .sce-form__msg.is-ok {
+	background-color: rgba(120, 200, 140, 0.14);
+	color: #9FE0B2;
+}
+.sce-scope .sce-faq__card .sce-form__msg.is-err {
+	background-color: rgba(230, 120, 116, 0.14);
+	color: #F0A9A6;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ column
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-faq__main { min-width: 0; }
+
+.sce-scope .sce-faq__eyebrow {
+	display: block;
+	margin-bottom: var(--sce-faq-eyebrow-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 15px;
+	letter-spacing: 2.6px;
+	text-transform: uppercase;
+	color: var(--sce-gold-icon);
+}
+.sce-scope .sce-faq__eyebrow--2 { margin-bottom: var(--sce-faq-eyebrow2-mb); }
+
+.sce-scope .sce-faq__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-faq-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 54px;
+	color: var(--sce-faq-ink);
+}
+.sce-scope .sce-faq__title em {
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-faq__intro {
+	margin-bottom: var(--sce-faq-intro-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 18px;
+	color: var(--sce-faq-muted);
+}
+
+.sce-scope .sce-faq__subtitle {
+	margin-bottom: var(--sce-faq-subtitle-mb);
+	font-family: var(--sce-font-display);
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 36px;
+	color: var(--sce-faq-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Accordion
+   -------------------------------------------------------------------------- */
+.sce-scope .sce-faq__list { display: block; }
+
+.sce-scope .sce-faq__item {
+	border-top: 1px solid var(--sce-faq-line);
+}
+.sce-scope .sce-faq__item:last-child { border-bottom: 1px solid var(--sce-faq-line); }
+
+.sce-scope .sce-faq__q {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 20px;
+	width: 100%;
+	padding-block: var(--sce-faq-item-pad);
+	text-align: left;
+	font-family: var(--sce-font-ui);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 18px;
+	color: var(--sce-faq-ink);
+	cursor: pointer;
+	transition: color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-faq__q:hover { color: #000000; }
+.sce-scope .sce-faq__q:focus-visible {
+	outline: none;
+	box-shadow: var(--sce-ring);
+	border-radius: 3px;
+}
+/* an open question keeps its bottom padding on the panel instead */
+.sce-scope .sce-faq__item.is-open .sce-faq__q { padding-bottom: var(--sce-faq-qa-gap); }
+
+.sce-scope .sce-faq__icon {
+	position: relative;
+	flex: 0 0 auto;
+	width: 14px;
+	height: 18px; /* matches the question line box, so the bars sit centred */
+	color: var(--sce-gold-icon);
+}
+/* two bars; the vertical one folds away to turn + into − */
+.sce-scope .sce-faq__icon::before,
+.sce-scope .sce-faq__icon::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 14px;
+	height: 1.5px;
+	margin-top: -0.75px;
+	background-color: currentColor;
+	transition: transform 0.42s var(--sce-ease-expo), opacity 0.28s var(--sce-ease);
+}
+.sce-scope .sce-faq__icon::after { transform: rotate(90deg); }
+.sce-scope .sce-faq__item.is-open .sce-faq__icon::after {
+	transform: rotate(0deg);
+	opacity: 0;
+}
+
+.sce-scope .sce-faq__panel {
+	height: 0;
+	overflow: hidden;
+	transition: height 0.42s var(--sce-ease-expo);
+}
+.sce-scope .sce-faq__a {
+	padding-bottom: var(--sce-faq-item-pad);
+	font-family: var(--sce-font-ui);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 21px;
+	color: var(--sce-faq-muted);
+}
+.sce-scope .sce-faq__a p { margin-bottom: 12px; }
+.sce-scope .sce-faq__a p:last-child { margin-bottom: 0; }
+.sce-scope .sce-faq__a a { color: var(--sce-faq-ink); text-decoration: underline; }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+	.sce-faq { --sce-shell-pad: 40px; --sce-faq-gap: 34px; --sce-faq-cols: 420fr 560fr; }
+}
+
+@media (max-width: 1024px) {
+	.sce-faq {
+		--sce-shell-pad: 32px;
+		--sce-faq-cols: minmax(0, 1fr);
+		--sce-faq-gap: 48px;
+		--sce-faq-pad-top: 72px;
+		--sce-faq-pad-bottom: 72px;
+	}
+	/* single column: the FAQ reads first, the card closes the section */
+	.sce-scope .sce-faq__aside { order: 2; }
+	.sce-scope .sce-faq__main { order: 1; }
+	.sce-scope.sce-faq--form-right .sce-faq__aside { order: 2; }
+	.sce-scope.sce-faq--form-right .sce-faq__main { order: 1; }
+	.sce-scope .sce-faq__card { max-width: 520px; }
+	.sce-scope .sce-faq__title { font-size: 32px; line-height: 1.32; }
+}
+
+@media (max-width: 600px) {
+	.sce-faq {
+		--sce-shell-pad: 24px;
+		--sce-faq-gap: 40px;
+		--sce-faq-pad-top: 56px;
+		--sce-faq-pad-bottom: 56px;
+		--sce-faq-card-pad: 28px 24px 30px;
+		--sce-faq-item-pad: 20px;
+	}
+	.sce-scope .sce-faq__card { max-width: none; }
+	.sce-scope .sce-faq__card-title { font-size: 24px; line-height: 1.25; }
+	.sce-scope .sce-faq__title { font-size: 27px; }
+	.sce-scope .sce-faq__subtitle { font-size: 21px; line-height: 1.4; }
+	.sce-scope .sce-faq__q { font-size: 13.5px; gap: 14px; }
+}
+
+@media (max-width: 400px) {
+	.sce-faq { --sce-shell-pad: 20px; }
+	.sce-scope .sce-faq__title { font-size: 24px; }
+}

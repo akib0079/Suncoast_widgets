@@ -13,6 +13,9 @@ They appear in the Elementor panel under a dedicated **Suncoast Ele Widgets** ca
 | **Suncoast Testimonials + Path** | Cross-fading testimonial slider beside a numbered path that advances itself |
 | **Suncoast Make It Yours** | Cream section — heading over a six-up grid of white icon cards |
 | **Suncoast Difference** | Dark compare band — heading + button beside two columns of feature pairs |
+| **Suncoast FAQ & Form** | Dark lead-capture card beside an accordion of common questions |
+| **Suncoast Call to Action** | Full-bleed photo close — centred heading, sub-copy, buttons |
+| **Suncoast Footer** | Logo, phone block and outlined CTA over a divider and link row |
 
 ---
 
@@ -42,9 +45,13 @@ Rebuild the zip after any source change:
 4. Drop **Suncoast Featured Projects** after it. This one is **white**, not
    cream, and the design gives it **no top padding** — the cream section above
    supplies the separation. Set *Section → Padding top* if you ever use it alone.
-5. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
+5. Drop the remaining widgets in order: **Benefits Band**, **Testimonials +
+   Path**, **Make It Yours**, **Difference**, **FAQ & Form**, **Call to
+   Action**, **Footer** — each in its own full-width section with `0` padding.
+6. Give each section a **CSS ID** (`products`, `projects`, `process`, `pricing`)
    matching the header's menu links. Scroll-spy and smooth scrolling pick them
-   up automatically.
+   up automatically. The FAQ widget sets its own `#quote` anchor, so every
+   "Request a quote" button on the page already scrolls to the form.
 
 ---
 
@@ -235,8 +242,46 @@ Two things the measurement caught that eyeballing would not:
   `line-height: 1` on the accent hands the strut back control; Playfair's actual
   ink (≤0.75em) never reaches the strut's headroom, so nothing clips.
 
-Also verified: no horizontal overflow at 1440 / 768 / 375, no console errors,
-all nine webfont faces load, PHP 8.5 lint clean, JS syntax clean.
+### FAQ & Form
+
+Every text box within **0.35px** of the Figma, measured against its text-frame
+tops — 112 / 136.35 / 261.2 / 366 / 390.85 / 475.9 / 511.7 — and the collapsed
+row pitch is exactly 67 (24 padding + 18 question + 24 padding + 1 rule).
+
+The card is **690×445 to the pixel**. That number only closes with a two-line
+title, a *single-line* sub and five labelled fields:
+`39 + 70 + 8 + 19.5 + 14.5 + 433.5 + 15.5 + 50 + 40`. The defaults ship that
+way — the message textarea is available but off, and the reassurance line under
+the button is empty with the Figma-free text as its placeholder. Turn either on
+and the card simply grows; nothing else moves.
+
+The default copy is written to the Figma's line counts (intro 4 lines at 585px,
+card sub 1 line at 365px). Editing it is expected — the rhythm is margins, not
+absolute positions, so a different line count still reads correctly.
+
+**Form field styling is shared with the hero banner.** `sce-form.css` holds the
+layout once and exposes it through custom properties; the banner keeps the light
+defaults and the FAQ card overrides them to the dark skin from a 0-2-0 selector.
+`sce-form.js` is likewise shared, so both forms mask, validate and submit
+identically and land in the same inbox and the same **Suncoast Leads** list.
+
+### Call to Action
+
+Within **0.55px** on every check: stage 600, heading box 117.55 (192 tall, three
+Playfair lines), sub 325.6, button 406 at 48 tall. The block is centred in the
+stage, so the heading's position is set by the *total* content height — the
+11px margin above the reassurance line is what lands 117.55 and 406 together.
+
+### Footer
+
+Band 234.5 against the Figma's 234, and the bottom row's ink at 171.1 against
+172 — both inside a pixel, and the two trade against each other, so this is the
+split. Top row 52 tall from the logo, then a hairline that draws itself in from
+the left on reveal.
+
+Also verified: no horizontal overflow at 1440 / 1280 / 1024 / 768 / 600 / 390,
+no console errors, all nine webfont faces load, PHP lint clean, JS syntax clean,
+and `tools/audit.py` green (it runs as part of `./build.sh`).
 
 ---
 
@@ -396,3 +441,24 @@ add_action( 'sce/lead_submitted', function ( $lead_id, $fields, $meta ) { /* CRM
    use an uploaded image instead.
 9. **Video block has no video yet.** The prototype points at a placeholder
    YouTube ID; set the real one under *Video teaser → Video*.
+10. **FAQ answers are WYSIWYG.** Each answer is a full editor field, so links,
+    bold and short lists all work. The panel animates from a measured pixel
+    height and is handed back to `auto` once it lands, so a later reflow — a
+    resize, a font swap — can never clip an open answer.
+11. **Reveals can never strand content.** Every widget's entrance starts at
+    `opacity: 0` and is flipped by JS. Two things can stop that flip: a
+    `requestAnimationFrame` that never runs, and an `IntersectionObserver` that
+    delivers nothing — both happen while the document is hidden. Each module now
+    reveals immediately when `document.hidden`, and carries a 3-second failsafe
+    that reveals regardless. An unrevealed section is invisible *content*, not
+    just a missing animation, so this is worth the two guards.
+12. **`tools/audit.py` runs in `build.sh`.** It fails the build on three things
+    this project has actually shipped by accident: a rule that does not start
+    from `.sce-scope`, a `.sce-scope .sce-faq` style selector that can never
+    match (the root class is on the *same* element, so those rules are dead —
+    it silently cost the form-position control and the CTA photo drift), and a
+    setting read in `render()` that no control declares.
+13. **The CTA heading is three lines ending in a gold italic “Inside.”** —
+    matching the Figma's 192px heading box. The photo drifts from `scale(1.06)`
+    to `1` once the section enters view, and holds still under
+    `prefers-reduced-motion`.

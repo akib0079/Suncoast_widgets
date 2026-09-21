@@ -1,15 +1,15 @@
 /* ==========================================================================
    Suncoast — shared reveal module
    --------------------------------------------------------------------------
-   The Make It Yours grid and the Difference band have no behaviour beyond the
-   staged entrance, so they share one module instead of shipping two near
-   identical copies. Add a selector to ROOTS to opt a widget in.
+   Several widgets have no behaviour beyond the staged entrance, so they share
+   one module instead of shipping near-identical copies. Add a selector to
+   ROOTS and a name to the hook list to opt a widget in.
    Idempotent — safe to re-run in the Elementor editor.
    ========================================================================== */
 (function (w, d) {
 	"use strict";
 
-	var ROOTS = ".sce-my, .sce-diff";
+	var ROOTS = ".sce-my, .sce-diff, .sce-cta, .sce-footer";
 	var REDUCED = w.matchMedia && w.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 	function fontsReady() {
@@ -36,6 +36,12 @@
 		registry.push(api);
 
 		var fire = function () {
+			// The rAF stages the transition: it guarantees the opacity:0 start
+			// state has been painted before the class flips. A hidden document
+			// never runs a frame — and has nothing to animate — so in that case
+			// flip it straight away rather than wait for a frame that may never
+			// come and leave the section stranded at opacity 0.
+			if (d.hidden) { root.classList.add("is-revealed"); return; }
 			w.requestAnimationFrame(function () { root.classList.add("is-revealed"); });
 		};
 
@@ -46,15 +52,26 @@
 		} else if (!("IntersectionObserver" in w)) {
 			fire();
 		} else {
+			// Failsafe: an IntersectionObserver delivers nothing while the
+			// document is hidden, so a section could stay unrevealed — that is
+			// invisible content, not merely a missing animation. Reveal anyway
+			// after a few seconds if the observer has not.
+			var settle = function () {
+				if (api.t) { clearTimeout(api.t); api.t = null; }
+				if (api.io) api.io.disconnect();
+				fire();
+			};
+			api.t = setTimeout(settle, 3000);
 			api.io = new IntersectionObserver(function (entries) {
 				for (var i = 0; i < entries.length; i++) {
-					if (entries[i].isIntersecting) { fire(); api.io.disconnect(); break; }
+					if (entries[i].isIntersecting) { settle(); break; }
 				}
 			}, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
 			api.io.observe(root);
 		}
 
 		api.destroy = function () {
+			if (api.t) { clearTimeout(api.t); api.t = null; }
 			if (api.io && api.io.disconnect) api.io.disconnect();
 			delete root.__sceReveal;
 		};
@@ -76,7 +93,7 @@
 	/* ---- Elementor editor: re-init whenever either widget is rendered ---- */
 	w.addEventListener("elementor/frontend/init", function () {
 		if (!w.elementorFrontend || !w.elementorFrontend.hooks) return;
-		["suncoast_grid", "suncoast_difference"].forEach(function (name) {
+		["suncoast_grid", "suncoast_difference", "suncoast_cta", "suncoast_footer"].forEach(function (name) {
 			w.elementorFrontend.hooks.addAction(
 				"frontend/element_ready/" + name + ".default",
 				function ($scope) {

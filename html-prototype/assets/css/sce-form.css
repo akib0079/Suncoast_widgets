@@ -1,0 +1,230 @@
+/* ==========================================================================
+   Suncoast — shared lead-form primitives
+   --------------------------------------------------------------------------
+   The hero banner's light card and the FAQ section's dark card use identical
+   markup and identical behaviour (see sce-form.js), so the layout lives here
+   once and each host re-skins it through the custom properties below. The
+   defaults are the banner's — a host overrides them from a two-class selector
+   (`.sce-banner .sce-form`, 0-2-0) which outranks the 0-1-0 block here.
+
+   Every selector is prefixed with `.sce-scope` — see the specificity
+   contract at the top of sce-base.css.
+   ========================================================================== */
+
+.sce-form {
+	/* ---- fields ---- */
+	--sce-fld-gap: 12px;            /* field to field */
+	--sce-fld-block-mb: 18px;       /* field stack to submit */
+	--sce-fld-group-mb: 20px;
+	--sce-fld-h: 50px;
+	--sce-fld-pad-x: 16px;
+	--sce-fld-radius: 8px;
+	--sce-fld-size: 14px;
+	--sce-fld-bg: var(--sce-white);
+	--sce-fld-ink: var(--sce-ink-2);
+	--sce-fld-muted: var(--sce-muted);
+	--sce-fld-border: var(--sce-line);
+	--sce-fld-border-hover: #D6D8DC;
+	--sce-fld-ring: rgba(235, 176, 77, 0.18);
+	--sce-fld-ring-strong: rgba(235, 176, 77, 0.28);
+
+	/* ---- labels ---- */
+	--sce-fld-label-size: 10px;
+	--sce-fld-label-weight: 500;
+	--sce-fld-label-lh: 1.5;
+	--sce-fld-label-ls: 0.08em;
+	--sce-fld-label-gap: 8px;
+	--sce-fld-label-ink: var(--sce-muted);
+
+	/* ---- submit ---- */
+	--sce-btn-h: 52px;
+	--sce-btn-mb: 14px;
+	--sce-btn-radius: 8px;
+	--sce-btn-size: 12px;
+	--sce-btn-ls: 0.08em;           /* .96px @ 12px */
+	--sce-btn-bg: var(--sce-ink-btn);
+	--sce-btn-bg-hover: #000;
+	--sce-btn-ink: var(--sce-white);
+	--sce-btn-sheen: rgba(255, 255, 255, 0.22);
+	--sce-btn-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+	--sce-btn-shadow-hover: 0 14px 28px -12px rgba(0, 0, 0, 0.6);
+
+	--sce-note-ink: #8D8D8D;
+}
+
+/* Fields ---------------------------------------------------------------- */
+.sce-scope .sce-form__fields {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sce-fld-gap);
+	margin-bottom: var(--sce-fld-block-mb);
+}
+
+.sce-scope .sce-form__field { position: relative; }
+
+.sce-scope .sce-form__input,
+.sce-scope .sce-form__select {
+	display: block;
+	width: 100%;
+	height: var(--sce-fld-h);
+	padding: 0 var(--sce-fld-pad-x);
+	border: 1px solid var(--sce-fld-border);
+	border-radius: var(--sce-fld-radius);
+	background-color: var(--sce-fld-bg);
+	font-family: var(--sce-font-body);
+	font-size: var(--sce-fld-size);
+	font-weight: 400;
+	/* borders eat 2px, so the text sits dead-centre at any height */
+	line-height: calc(var(--sce-fld-h) - 2px);
+	color: var(--sce-fld-ink);
+	transition:
+		border-color var(--sce-dur) var(--sce-ease),
+		box-shadow var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-form__input::placeholder { color: var(--sce-fld-muted); opacity: 1; }
+.sce-scope .sce-form__input:hover,
+.sce-scope .sce-form__select:hover { border-color: var(--sce-fld-border-hover); }
+.sce-scope .sce-form__input:focus,
+.sce-scope .sce-form__select:focus {
+	border-color: var(--sce-gold);
+	box-shadow: 0 0 0 3px var(--sce-fld-ring);
+}
+.sce-scope .sce-form__input:focus-visible,
+.sce-scope .sce-form__select:focus-visible {
+	box-shadow: 0 0 0 3px var(--sce-fld-ring-strong);
+	border-radius: var(--sce-fld-radius);
+}
+/* invalid styling only after a submit attempt */
+.sce-scope .sce-form.is-validated .sce-form__input:invalid,
+.sce-scope .sce-form.is-validated .sce-form__select:invalid {
+	border-color: #D9534F;
+	box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.14);
+}
+
+.sce-scope .sce-form__group { margin-bottom: var(--sce-fld-group-mb); }
+.sce-scope .sce-form__label {
+	display: block;
+	margin-bottom: var(--sce-fld-label-gap);
+	font-family: var(--sce-font-body);
+	font-size: var(--sce-fld-label-size);
+	font-weight: var(--sce-fld-label-weight);
+	line-height: var(--sce-fld-label-lh);
+	letter-spacing: var(--sce-fld-label-ls);
+	text-transform: uppercase;
+	color: var(--sce-fld-label-ink);
+}
+
+/* sce-base.css kills Chrome's yellow autofill wash by painting white; a dark
+   card needs its own fill, so re-state it from the field tokens. Same 0-2-0
+   specificity, later in source order, so this wins. */
+.sce-scope .sce-form__input:-webkit-autofill,
+.sce-scope .sce-form__input:-webkit-autofill:hover,
+.sce-scope .sce-form__input:-webkit-autofill:focus,
+.sce-scope .sce-form__select:-webkit-autofill {
+	-webkit-text-fill-color: var(--sce-fld-ink);
+	-webkit-box-shadow: 0 0 0 1000px var(--sce-fld-bg) inset;
+	box-shadow: 0 0 0 1000px var(--sce-fld-bg) inset;
+	transition: background-color 9999s ease-out 0s;
+}
+
+/* A group nested inside the field stack takes its spacing from the flex gap,
+   not from its own margin — the FAQ card stacks labelled groups this way. */
+.sce-scope .sce-form__fields .sce-form__group { margin-bottom: 0; }
+
+/* Textarea variant: grows with the copy instead of sitting on --sce-fld-h. */
+.sce-scope .sce-form__textarea {
+	height: auto;
+	min-height: calc(var(--sce-fld-h) * 1.7);
+	padding: 12px var(--sce-fld-pad-x);
+	line-height: 1.55;
+	resize: vertical;
+}
+.sce-scope .sce-form__textarea::placeholder { color: var(--sce-fld-muted); opacity: 1; }
+
+.sce-scope .sce-form__select { padding-right: 42px; color: var(--sce-fld-muted); cursor: pointer; }
+.sce-scope .sce-form__select.has-value { color: var(--sce-fld-ink); }
+/* the native dropdown list is painted by the OS on its own surface — keep it
+   readable rather than inheriting a dark card's white ink */
+.sce-scope .sce-form__select option { color: var(--sce-ink-2); background-color: var(--sce-white); }
+.sce-scope .sce-form__chev {
+	position: absolute;
+	top: 50%;
+	right: 16px;
+	width: 12px;
+	height: 12px;
+	margin-top: -6px;
+	color: var(--sce-fld-muted);
+	pointer-events: none;
+	transition: transform var(--sce-dur) var(--sce-ease), color var(--sce-dur) var(--sce-ease);
+}
+.sce-scope .sce-form__field:focus-within .sce-form__chev { color: var(--sce-gold); transform: rotate(180deg); }
+
+/* Submit ----------------------------------------------------------------- */
+.sce-scope .sce-form__submit {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: var(--sce-btn-h);
+	margin-bottom: var(--sce-btn-mb);
+	border-radius: var(--sce-btn-radius);
+	background-color: var(--sce-btn-bg);
+	font-family: var(--sce-font-body);
+	font-size: var(--sce-btn-size);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: var(--sce-btn-ls);
+	text-transform: uppercase;
+	color: var(--sce-btn-ink);
+	box-shadow: var(--sce-btn-shadow);
+	transition:
+		transform 0.38s var(--sce-ease-expo),
+		box-shadow 0.38s var(--sce-ease),
+		background-color 0.38s var(--sce-ease);
+}
+.sce-scope .sce-form__submit::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 34%, var(--sce-btn-sheen) 50%, transparent 66%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+}
+.sce-scope .sce-form__submit:hover,
+.sce-scope .sce-form__submit:focus-visible {
+	background-color: var(--sce-btn-bg-hover);
+	transform: translateY(-2px);
+	box-shadow: var(--sce-btn-shadow-hover);
+}
+.sce-scope .sce-form__submit:hover::after,
+.sce-scope .sce-form__submit:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-form__submit:active { transform: translateY(0); }
+.sce-scope .sce-form.is-busy .sce-form__submit { pointer-events: none; opacity: 0.72; }
+
+.sce-scope .sce-form__note {
+	font-family: var(--sce-font-body);
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: 0.02em;
+	text-align: center;
+	color: var(--sce-note-ink);
+}
+
+/* Inline response message (the admin e-mail template mirrors this copy) */
+.sce-scope .sce-form__msg {
+	display: none;
+	margin-bottom: 14px;
+	padding: 12px 14px;
+	border-radius: var(--sce-fld-radius);
+	font-family: var(--sce-font-body);
+	font-size: 13px;
+	line-height: 1.45;
+}
+.sce-scope .sce-form__msg.is-on { display: block; }
+.sce-scope .sce-form__msg.is-ok { background-color: rgba(43, 138, 62, 0.1); color: #1E6B32; }
+.sce-scope .sce-form__msg.is-err { background-color: rgba(217, 83, 79, 0.1); color: #A3322E; }

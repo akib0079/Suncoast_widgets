@@ -156,6 +156,11 @@
 		var slider, steps;
 
 		var reveal = function () {
+			// The rAF stages the transition: it guarantees the opacity:0 start
+			// state has been painted before the class flips. A hidden document
+			// never runs a frame — and has nothing to animate — so flip it
+			// straight away rather than strand the section at opacity 0.
+			if (d.hidden) { root.classList.add("is-revealed"); return; }
 			w.requestAnimationFrame(function () { root.classList.add("is-revealed"); });
 		};
 
@@ -187,6 +192,13 @@
 			if (root.getBoundingClientRect().top < w.innerHeight * 0.85) {
 				fontsReady().then(function () { setVisible(true); });
 			}
+			// Failsafe: an IntersectionObserver delivers nothing while the document
+			// is hidden, and an unrevealed section is invisible content rather than
+			// just a missing animation. The step timers stay gated either way —
+			// start() checks d.hidden itself.
+			api.t = setTimeout(function () {
+				if (!root.classList.contains("is-revealed")) setVisible(true);
+			}, 3000);
 		}
 
 		d.addEventListener("visibilitychange", onVis);
@@ -197,6 +209,7 @@
 
 		api.setVisible = setVisible;
 		api.destroy = function () {
+			if (api.t) { clearTimeout(api.t); api.t = null; }
 			if (api.io && api.io.disconnect) api.io.disconnect();
 			d.removeEventListener("visibilitychange", onVis);
 			if (slider) slider.stop();

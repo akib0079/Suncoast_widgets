@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Suncoast — Hero Banner widget (content + form + marquee)
+   Suncoast — Hero Banner widget (content + form card + marquee)
+   Field/submit primitives live in sce-form.css; this file styles the card.
    Figma: stage 1440x721 | eyebrow Poppins 400 12/18 ls 3.12 #EBB04D
           h1 Playfair 400 54/61.4 ls -1.36 | body Inter 400 14/150% #E5E5E5
           list Inter 400 16/25.6 #FFF | card 440 max, pad 51/40/40, r16,
@@ -232,153 +233,6 @@
 	color: var(--sce-muted);
 }
 
-/* Fields ---------------------------------------------------------------- */
-.sce-scope .sce-form__fields {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	margin-bottom: 18px;
-}
-
-.sce-scope .sce-form__field { position: relative; }
-
-.sce-scope .sce-form__input,
-.sce-scope .sce-form__select {
-	display: block;
-	width: 100%;
-	height: 50px;
-	padding: 0 16px;
-	border: 1px solid var(--sce-line);
-	border-radius: 8px;
-	background-color: var(--sce-white);
-	font-family: var(--sce-font-body);
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 48px;
-	color: var(--sce-ink-2);
-	transition:
-		border-color var(--sce-dur) var(--sce-ease),
-		box-shadow var(--sce-dur) var(--sce-ease);
-}
-.sce-scope .sce-form__input::placeholder { color: var(--sce-muted); opacity: 1; }
-.sce-scope .sce-form__input:hover,
-.sce-scope .sce-form__select:hover { border-color: #D6D8DC; }
-.sce-scope .sce-form__input:focus,
-.sce-scope .sce-form__select:focus {
-	border-color: var(--sce-gold);
-	box-shadow: 0 0 0 3px rgba(235, 176, 77, 0.18);
-}
-.sce-scope .sce-form__input:focus-visible,
-.sce-scope .sce-form__select:focus-visible {
-	box-shadow: 0 0 0 3px rgba(235, 176, 77, 0.28);
-	border-radius: 8px;
-}
-/* invalid styling only after a submit attempt */
-.sce-scope .sce-form.is-validated .sce-form__input:invalid,
-.sce-scope .sce-form.is-validated .sce-form__select:invalid {
-	border-color: #D9534F;
-	box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.14);
-}
-
-.sce-scope .sce-form__group { margin-bottom: 20px; }
-.sce-scope .sce-form__label {
-	display: block;
-	margin-bottom: 8px;
-	font-family: var(--sce-font-body);
-	font-size: 10px;
-	font-weight: 500;
-	line-height: 1.5;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--sce-muted);
-}
-
-.sce-scope .sce-form__select { padding-right: 42px; color: var(--sce-muted); cursor: pointer; }
-.sce-scope .sce-form__select.has-value { color: var(--sce-ink-2); }
-.sce-scope .sce-form__select option { color: var(--sce-ink-2); }
-.sce-scope .sce-form__chev {
-	position: absolute;
-	top: 50%;
-	right: 16px;
-	width: 12px;
-	height: 12px;
-	margin-top: -6px;
-	color: var(--sce-muted);
-	pointer-events: none;
-	transition: transform var(--sce-dur) var(--sce-ease), color var(--sce-dur) var(--sce-ease);
-}
-.sce-scope .sce-form__field:focus-within .sce-form__chev { color: var(--sce-gold); transform: rotate(180deg); }
-
-/* Submit ----------------------------------------------------------------- */
-.sce-scope .sce-form__submit {
-	position: relative;
-	isolation: isolate;
-	overflow: hidden;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	height: 52px;
-	margin-bottom: 14px;
-	border-radius: 8px;
-	background-color: var(--sce-ink-btn);
-	font-family: var(--sce-font-body);
-	font-size: 12px;
-	font-weight: 700;
-	line-height: 1.2;
-	letter-spacing: 0.08em; /* .96px @ 12px */
-	text-transform: uppercase;
-	color: var(--sce-white);
-	box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.3);
-	transition:
-		transform 0.38s var(--sce-ease-expo),
-		box-shadow 0.38s var(--sce-ease),
-		background-color 0.38s var(--sce-ease);
-}
-.sce-scope .sce-form__submit::after {
-	content: "";
-	position: absolute;
-	inset: -1px;
-	z-index: -1;
-	background: linear-gradient(105deg, transparent 34%, rgba(255, 255, 255, 0.22) 50%, transparent 66%);
-	transform: translate3d(-130%, 0, 0);
-	transition: transform 0.85s var(--sce-ease-expo);
-}
-.sce-scope .sce-form__submit:hover,
-.sce-scope .sce-form__submit:focus-visible {
-	background-color: #000;
-	transform: translateY(-2px);
-	box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.6);
-}
-.sce-scope .sce-form__submit:hover::after,
-.sce-scope .sce-form__submit:focus-visible::after { transform: translate3d(130%, 0, 0); }
-.sce-scope .sce-form__submit:active { transform: translateY(0); }
-.sce-scope .sce-form.is-busy .sce-form__submit { pointer-events: none; opacity: 0.72; }
-
-.sce-scope .sce-form__note {
-	font-family: var(--sce-font-body);
-	font-size: 11px;
-	font-weight: 600;
-	line-height: 1.4;
-	letter-spacing: 0.02em;
-	text-align: center;
-	color: #8D8D8D;
-}
-
-/* Inline response message (the admin e-mail template mirrors this copy) */
-.sce-scope .sce-form__msg {
-	display: none;
-	margin-bottom: 14px;
-	padding: 12px 14px;
-	border-radius: 8px;
-	font-family: var(--sce-font-body);
-	font-size: 13px;
-	line-height: 1.45;
-}
-.sce-scope .sce-form__msg.is-on { display: block; }
-.sce-scope .sce-form__msg.is-ok { background-color: rgba(43, 138, 62, 0.1); color: #1E6B32; }
-.sce-scope .sce-form__msg.is-err { background-color: rgba(217, 83, 79, 0.1); color: #A3322E; }
-
 /* --------------------------------------------------------------------------
    Marquee
    -------------------------------------------------------------------------- */
@@ -498,8 +352,6 @@
 	.sce-scope .sce-banner__list { gap: 11px; }
 	.sce-scope .sce-banner__list li { font-size: 14px; gap: 10px; }
 	.sce-scope .sce-banner__tick { width: 18px; height: 18px; margin-top: 2px; }
-	.sce-scope .sce-form__input,
-	.sce-scope .sce-form__select { height: 48px; line-height: 46px; }
-	.sce-scope .sce-form__submit { height: 50px; }
+	.sce-scope .sce-card .sce-form { --sce-fld-h: 48px; --sce-btn-h: 50px; }
 	.sce-scope .sce-mq__set li { font-size: 14px; }
 }

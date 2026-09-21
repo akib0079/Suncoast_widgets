@@ -62,6 +62,12 @@
 	function initReveal(root) {
 		if (REDUCED) { root.classList.add("is-revealed"); return null; }
 		var fire = function () {
+			// The rAF stages the transition: it guarantees the opacity:0 start
+			// state has been painted before the class flips. A hidden document
+			// never runs a frame — and has nothing to animate — so in that case
+			// flip it straight away rather than wait for a frame that may never
+			// come and leave the section stranded at opacity 0.
+			if (d.hidden) { root.classList.add("is-revealed"); return; }
 			w.requestAnimationFrame(function () { root.classList.add("is-revealed"); });
 		};
 		if (root.getBoundingClientRect().top < w.innerHeight * 0.85) {
@@ -69,13 +75,24 @@
 			return null;
 		}
 		if (!("IntersectionObserver" in w)) { fire(); return null; }
+		// Failsafe: an IntersectionObserver delivers nothing while the
+		// document is hidden, so a section could stay unrevealed — that is
+		// invisible content, not merely a missing animation. Reveal anyway
+		// after a few seconds if the observer has not.
+		var timer = null;
+		var settle0 = function () {
+			if (timer) { clearTimeout(timer); timer = null; }
+			if (io) io.disconnect();
+		};
+		var settle = function () { settle0(); fire(); };
 		var io = new IntersectionObserver(function (entries) {
 			for (var i = 0; i < entries.length; i++) {
-				if (entries[i].isIntersecting) { fire(); io.disconnect(); break; }
+				if (entries[i].isIntersecting) { settle(); break; }
 			}
 		}, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
 		io.observe(root);
-		return io;
+		timer = setTimeout(settle, 3000);
+		return { disconnect: settle0 };
 	}
 
 	/* -------------------------------------------------------------- embed */

@@ -1,0 +1,234 @@
+/* ==========================================================================
+   Suncoast — Call to Action widget (full-bleed emotional close)
+   Figma (measured 1:1 from the export):
+
+     stage    1440 x 600, photo behind a dark scrim, content centred
+     heading  Playfair 400 54/64 #FFFFFF + *italic* #EBB04D accent
+              (ink top 117.55, H 192 = 3 lines)
+     sub      Poppins  400 16/22 #E5E5E5   (ink top 325.6, 16 below)
+     button   ~48 tall, 36 below the sub   (ink top 406)
+     footnote Poppins  400 12/18 ls .6 #EBB04D
+
+   Every selector is prefixed with `.sce-scope` — see sce-base.css.
+   ========================================================================== */
+
+.sce-cta {
+	/* ---- tunables (each one maps to an Elementor control) ---- */
+	--sce-cta-min-h: 600px;
+	--sce-cta-pad-block: 96px;
+	--sce-cta-max: 860px;
+
+	--sce-cta-title-size: clamp(30px, 3.75vw, 54px);
+	--sce-cta-title-lh: 1.185;   /* 64/54 */
+	--sce-cta-title-mb: 16px;
+
+	--sce-cta-sub-mb: 36px;
+	/* the stage centres the block, so this margin is what puts the heading
+	   box on Figma's 117.55 and the button on 406 */
+	--sce-cta-note-mt: 11px;
+
+	--sce-cta-overlay: linear-gradient(
+		180deg,
+		rgba(8, 7, 5, 0.62) 0%,
+		rgba(8, 7, 5, 0.50) 45%,
+		rgba(8, 7, 5, 0.66) 100%
+	);
+
+	--sce-cta-btn-bg: var(--sce-gold-icon);
+	--sce-cta-btn-bg-hover: #F5C878;
+	--sce-cta-btn-ink: #000000;
+	--sce-cta-btn-radius: 6px;
+	--sce-cta-btn-h: 48px;
+}
+
+.sce-scope.sce-cta {
+	position: relative;
+	isolation: isolate;
+}
+
+.sce-scope .sce-cta__stage {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--sce-cta-min-h);
+	padding-block: var(--sce-cta-pad-block);
+	overflow: hidden;
+	background-color: #101010; /* paints before the photo decodes — no flash */
+}
+
+.sce-scope .sce-cta__bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	/* a very slow drift keeps the still photo feeling alive without
+	   competing with the copy; disabled under reduced-motion below */
+	transform: scale(1.06);
+	transition: transform 1.6s var(--sce-ease-expo);
+}
+.sce-scope.is-revealed .sce-cta__bg { transform: scale(1); }
+
+.sce-scope .sce-cta__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: var(--sce-cta-overlay);
+	pointer-events: none;
+}
+
+.sce-scope .sce-cta__inner {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	max-width: calc(var(--sce-cta-max) + (var(--sce-shell-pad) * 2));
+	margin-inline: auto;
+	padding-inline: var(--sce-shell-pad);
+	text-align: center;
+}
+
+.sce-scope .sce-cta__title {
+	/* contains the .sce-rvline descender margin — see sce-banner.css */
+	display: flow-root;
+	margin-bottom: var(--sce-cta-title-mb);
+	font-family: var(--sce-font-display);
+	font-size: var(--sce-cta-title-size);
+	font-weight: 400;
+	line-height: var(--sce-cta-title-lh);
+	letter-spacing: -0.01em;
+	color: var(--sce-white);
+	text-wrap: balance;
+}
+.sce-scope .sce-cta__title em {
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--sce-gold);
+}
+
+.sce-scope .sce-cta__sub {
+	max-width: 640px;
+	margin-inline: auto;
+	margin-bottom: var(--sce-cta-sub-mb);
+	font-family: var(--sce-font-ui);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 22px;
+	color: var(--sce-para);
+}
+
+.sce-scope .sce-cta__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+}
+
+.sce-scope .sce-cta__btn {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	min-height: var(--sce-cta-btn-h);
+	padding: 14px 28px;
+	border-radius: var(--sce-cta-btn-radius);
+	background-color: var(--sce-cta-btn-bg);
+	font-family: var(--sce-font-ui);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--sce-cta-btn-ink);
+	transition:
+		transform 0.4s var(--sce-ease-expo),
+		box-shadow 0.4s var(--sce-ease),
+		background-color 0.4s var(--sce-ease);
+}
+.sce-scope .sce-cta__btn::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.55) 48%, transparent 64%);
+	transform: translate3d(-130%, 0, 0);
+	transition: transform 0.85s var(--sce-ease-expo);
+	pointer-events: none;
+}
+.sce-scope .sce-cta__btn:hover,
+.sce-scope .sce-cta__btn:focus-visible {
+	background-color: var(--sce-cta-btn-bg-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 14px 30px -12px rgba(199, 140, 40, 0.65);
+}
+.sce-scope .sce-cta__btn:hover::after,
+.sce-scope .sce-cta__btn:focus-visible::after { transform: translate3d(130%, 0, 0); }
+.sce-scope .sce-cta__btn:active { transform: translateY(0); }
+.sce-scope .sce-cta__btn svg { width: 13px; height: 13px; }
+
+/* Secondary — a quiet outline so the gold button keeps the emphasis */
+.sce-scope .sce-cta__btn--ghost {
+	background-color: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.55);
+	color: var(--sce-white);
+}
+.sce-scope .sce-cta__btn--ghost::after { display: none; }
+.sce-scope .sce-cta__btn--ghost:hover,
+.sce-scope .sce-cta__btn--ghost:focus-visible {
+	background-color: rgba(255, 255, 255, 0.12);
+	border-color: var(--sce-white);
+	box-shadow: none;
+}
+
+.sce-scope .sce-cta__note {
+	display: block;
+	margin-top: var(--sce-cta-note-mt);
+	font-family: var(--sce-font-ui);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: 0.6px;
+	color: var(--sce-gold);
+}
+
+/* --------------------------------------------------------------------------
+   Reveal
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+	.sce-scope .sce-cta__bg { transform: none; transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+	.sce-cta {
+		--sce-shell-pad: 32px;
+		--sce-cta-min-h: 500px;
+		--sce-cta-pad-block: 80px;
+	}
+}
+
+@media (max-width: 600px) {
+	.sce-cta {
+		--sce-shell-pad: 24px;
+		--sce-cta-min-h: 440px;
+		--sce-cta-pad-block: 64px;
+		--sce-cta-sub-mb: 28px;
+	}
+	.sce-scope .sce-cta__sub { font-size: 15px; line-height: 1.5; }
+	.sce-scope .sce-cta__actions { flex-direction: column; align-items: stretch; }
+	.sce-scope .sce-cta__btn { width: 100%; }
+}
+
+@media (max-width: 400px) {
+	.sce-cta { --sce-shell-pad: 20px; }
+}

@@ -34,6 +34,12 @@
 		if (REDUCED) { root.classList.add("is-revealed"); return null; }
 
 		var fire = function () {
+			// The rAF stages the transition: it guarantees the opacity:0 start
+			// state has been painted before the class flips. A hidden document
+			// never runs a frame — and has nothing to animate — so in that case
+			// flip it straight away rather than wait for a frame that may never
+			// come and leave the section stranded at opacity 0.
+			if (d.hidden) { root.classList.add("is-revealed"); return; }
 			w.requestAnimationFrame(function () { root.classList.add("is-revealed"); });
 		};
 
@@ -43,13 +49,24 @@
 		if (aboveFold) { fontsReady().then(fire); return null; }
 
 		if (!("IntersectionObserver" in w)) { fire(); return null; }
+		// Failsafe: an IntersectionObserver delivers nothing while the
+		// document is hidden, so a section could stay unrevealed — that is
+		// invisible content, not merely a missing animation. Reveal anyway
+		// after a few seconds if the observer has not.
+		var timer = null;
+		var settle0 = function () {
+			if (timer) { clearTimeout(timer); timer = null; }
+			if (io) io.disconnect();
+		};
+		var settle = function () { settle0(); fire(); };
 		var io = new IntersectionObserver(function (entries) {
 			for (var i = 0; i < entries.length; i++) {
-				if (entries[i].isIntersecting) { fire(); io.disconnect(); break; }
+				if (entries[i].isIntersecting) { settle(); break; }
 			}
 		}, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
 		io.observe(root);
-		return io;
+		timer = setTimeout(settle, 3000);
+		return { disconnect: settle0 };
 	}
 
 	/* ------------------------------------------------------------ marquee */
@@ -89,98 +106,6 @@
 		return { destroy: function () { w.removeEventListener("resize", onResize); } };
 	}
 
-	/* --------------------------------------------------------------- form */
-	function initForm(form) {
-		if (!form) return;
-
-		/* select: grey while on the placeholder option, ink once chosen */
-		[].forEach.call(form.querySelectorAll(".sce-form__select"), function (sel) {
-			var sync = function () { sel.classList.toggle("has-value", !!sel.value); };
-			sel.addEventListener("change", sync);
-			sync();
-		});
-
-		/* light input masks — never fight the user, just drop invalid chars */
-		var zip = form.querySelector('[data-mask="zip"]');
-		if (zip) {
-			zip.addEventListener("input", function () {
-				var v = zip.value.replace(/[^\d]/g, "").slice(0, 5);
-				if (v !== zip.value) zip.value = v;
-			});
-		}
-		var tel = form.querySelector('[data-mask="tel"]');
-		if (tel) {
-			tel.addEventListener("input", function () {
-				var v = tel.value.replace(/[^\d\s()+\-.]/g, "").slice(0, 20);
-				if (v !== tel.value) tel.value = v;
-			});
-		}
-
-		var msg = form.querySelector(".sce-form__msg");
-		function say(text, ok) {
-			if (!msg) return;
-			msg.textContent = text;
-			msg.className = "sce-form__msg is-on " + (ok ? "is-ok" : "is-err");
-			msg.setAttribute("role", ok ? "status" : "alert");
-		}
-
-		form.addEventListener("submit", function (e) {
-			form.classList.add("is-validated");
-
-			if (!form.checkValidity()) {
-				e.preventDefault();
-				var bad = form.querySelector(":invalid");
-				if (bad) bad.focus();
-				say(form.getAttribute("data-msg-invalid") || "Please complete the highlighted fields.", false);
-				return;
-			}
-
-			// Native POST path (used when the widget renders an Elementor Pro form)
-			if (form.getAttribute("data-ajax") !== "yes") return;
-
-			e.preventDefault();
-			var cfg = w.SCE_FORM || {};
-			if (!cfg.ajaxUrl) { say("Form endpoint is not configured.", false); return; }
-
-			var data = new FormData(form);
-			data.append("action", cfg.action || "sce_lead");
-			data.append("nonce", cfg.nonce || "");
-			data.append("referer", d.referrer || "");
-
-			form.classList.add("is-busy");
-			var btn = form.querySelector(".sce-form__submit");
-			var label = btn ? btn.textContent : "";
-			if (btn) btn.textContent = form.getAttribute("data-msg-sending") || "Sending…";
-
-			w.fetch(cfg.ajaxUrl, {
-				method: "POST",
-				body: data,
-				credentials: "same-origin",
-				headers: { "X-Requested-With": "XMLHttpRequest" }
-			})
-				.then(function (res) { return res.json().catch(function () { return { success: res.ok }; }); })
-				.then(function (json) {
-					if (json && json.success) {
-						say((json.data && json.data.message) || form.getAttribute("data-msg-success") ||
-							"Thank you — we'll be in touch within one business day.", true);
-						form.reset();
-						form.classList.remove("is-validated");
-						[].forEach.call(form.querySelectorAll(".sce-form__select"), function (s) { s.classList.remove("has-value"); });
-					} else {
-						say((json && json.data && json.data.message) || form.getAttribute("data-msg-error") ||
-							"Something went wrong. Please call us instead.", false);
-					}
-				})
-				.catch(function () {
-					say(form.getAttribute("data-msg-error") || "Network error. Please call us instead.", false);
-				})
-				.then(function () {
-					form.classList.remove("is-busy");
-					if (btn) btn.textContent = label;
-				});
-		});
-	}
-
 	/* Live instances, so the Elementor editor's re-renders don't leak listeners. */
 	var registry = [];
 	function sweep() {
@@ -202,7 +127,7 @@
 		api.reveal = initReveal(root);
 		var mq = root.querySelector(".sce-mq");
 		if (mq) api.marquee = initMarquee(mq);
-		initForm(root.querySelector(".sce-form"));
+		if (w.SCEForm) w.SCEForm.init(root.querySelector(".sce-form"));
 
 		api.destroy = function () {
 			if (api.reveal && api.reveal.disconnect) api.reveal.disconnect();

@@ -16,7 +16,7 @@ final class SCE_Assets {
 	/** @var SCE_Assets|null */
 	private static $instance = null;
 
-	/** Google Fonts handle, shared by both widgets. */
+	/** Google Fonts handle, shared by every widget. */
 	const FONTS = 'sce-fonts';
 
 	public static function instance() {
@@ -49,6 +49,9 @@ final class SCE_Assets {
 		$css = SCE_URL . 'assets/css/';
 		$js  = SCE_URL . 'assets/js/';
 
+		// Note: 'sce-form' exists as both a style and a script handle. WordPress
+		// keeps the two registries apart, so the shared name is intentional.
+
 		if ( $this->load_fonts() ) {
 			wp_register_style( self::FONTS, $this->fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 		}
@@ -58,27 +61,35 @@ final class SCE_Assets {
 		$base = $this->load_fonts() ? array( self::FONTS, 'sce-base' ) : array( 'sce-base' );
 
 		wp_register_style( 'sce-header', $css . 'sce-header.css', $base, SCE_VERSION );
-		wp_register_style( 'sce-banner', $css . 'sce-banner.css', $base, SCE_VERSION );
+		// shared field/submit primitives for the banner + FAQ lead forms
+		wp_register_style( 'sce-form', $css . 'sce-form.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-banner', $css . 'sce-banner.css', array( 'sce-form' ), SCE_VERSION );
 		wp_register_style( 'sce-benefits', $css . 'sce-benefits.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-projects', $css . 'sce-projects.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-band', $css . 'sce-band.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-path', $css . 'sce-path.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-grid', $css . 'sce-grid.css', $base, SCE_VERSION );
 		wp_register_style( 'sce-diff', $css . 'sce-diff.css', $base, SCE_VERSION );
-		// Maps Elementor Pro's form markup onto the Figma card design.
-		wp_register_style( 'sce-form-elementor', $css . 'sce-form-elementor.css', array( 'sce-banner' ), SCE_VERSION );
+		wp_register_style( 'sce-faq', $css . 'sce-faq.css', array( 'sce-form' ), SCE_VERSION );
+		wp_register_style( 'sce-cta', $css . 'sce-cta.css', $base, SCE_VERSION );
+		wp_register_style( 'sce-footer', $css . 'sce-footer.css', $base, SCE_VERSION );
+		// Maps Elementor Pro's form markup onto the same primitives.
+		wp_register_style( 'sce-form-elementor', $css . 'sce-form-elementor.css', array( 'sce-form' ), SCE_VERSION );
 
 		wp_register_script( 'sce-header', $js . 'sce-header.js', array(), SCE_VERSION, true );
-		wp_register_script( 'sce-banner', $js . 'sce-banner.js', array(), SCE_VERSION, true );
+		// shared lead-form behaviour — the banner and the FAQ card both use it
+		wp_register_script( 'sce-form', $js . 'sce-form.js', array(), SCE_VERSION, true );
+		wp_register_script( 'sce-banner', $js . 'sce-banner.js', array( 'sce-form' ), SCE_VERSION, true );
 		wp_register_script( 'sce-benefits', $js . 'sce-benefits.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-projects', $js . 'sce-projects.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-band', $js . 'sce-band.js', array(), SCE_VERSION, true );
 		wp_register_script( 'sce-path', $js . 'sce-path.js', array(), SCE_VERSION, true );
-		// shared by the grid and difference widgets — reveal only, no behaviour
+		wp_register_script( 'sce-faq', $js . 'sce-faq.js', array( 'sce-form' ), SCE_VERSION, true );
+		// shared by the widgets whose only behaviour is the staged entrance
 		wp_register_script( 'sce-reveal', $js . 'sce-reveal.js', array(), SCE_VERSION, true );
 
 		wp_localize_script(
-			'sce-banner',
+			'sce-form',
 			'SCE_FORM',
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),

@@ -7,6 +7,12 @@ SLUG="suncoast-ele-widgets"
 VERSION=$(grep -m1 "^ \* Version:" "plugin/$SLUG/$SLUG.php" | awk '{print $3}')
 OUT="dist/$SLUG-$VERSION.zip"
 
+# Fail the build rather than ship a dead selector or an undeclared setting.
+php -l "plugin/$SLUG/$SLUG.php" >/dev/null
+find "plugin/$SLUG" -name '*.php' -print0 | xargs -0 -n1 php -l | grep -v 'No syntax errors' && exit 1
+command -v node >/dev/null && find "plugin/$SLUG/assets/js" -name '*.js' -print0 | xargs -0 -n1 node --check
+python3 tools/audit.py
+
 mkdir -p dist
 rm -f "$OUT" "dist/$SLUG.zip"
 

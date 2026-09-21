@@ -17,6 +17,7 @@
 
 <link rel="stylesheet" href="assets/css/sce-base.css">
 <link rel="stylesheet" href="assets/css/sce-header.css">
+<link rel="stylesheet" href="assets/css/sce-form.css">
 <link rel="stylesheet" href="assets/css/sce-banner.css">
 <link rel="stylesheet" href="assets/css/sce-benefits.css">
 <link rel="stylesheet" href="assets/css/sce-projects.css">
@@ -24,6 +25,9 @@
 <link rel="stylesheet" href="assets/css/sce-path.css">
 <link rel="stylesheet" href="assets/css/sce-grid.css">
 <link rel="stylesheet" href="assets/css/sce-diff.css">
+<link rel="stylesheet" href="assets/css/sce-faq.css">
+<link rel="stylesheet" href="assets/css/sce-cta.css">
+<link rel="stylesheet" href="assets/css/sce-footer.css">
 
 <style>
 	/* ------------------------------------------------------------------
@@ -649,6 +653,200 @@
 	</div>
 </section>
 
+<!-- ==========================================================================
+     WIDGET 9 — FAQ & Form
+     ========================================================================== -->
+<section class="sce-faq sce-scope" id="quote" data-faq-single="yes">
+	<div class="sce-faq__inner">
+		<div class="sce-faq__grid">
+
+			<div class="sce-faq__aside">
+				<div class="sce-faq__card sce-rv" style="--sce-rv-d:60ms">
+					<div class="sce-faq__card-title">Request Your Free<br>Design <em>Consultation</em></div>
+					<p class="sce-faq__card-sub">Sizing, options and a firm number — no obligation.</p>
+
+					<form class="sce-form" method="post" action="#" data-ajax="no"
+					      data-msg-invalid="Please complete the highlighted fields."
+					      data-msg-sending="Sending…"
+					      data-msg-success="Thank you — we will be in touch within one business day."
+					      data-msg-error="Something went wrong. Please call us instead.">
+						<p class="sce-form__msg" aria-live="polite"></p>
+						<div class="sce-form__fields">
+					<div class="sce-form__group">
+						<label class="sce-form__label" for="sce-faq-name-d">Full name</label>
+						<div class="sce-form__field">
+							<input class="sce-form__input" id="sce-faq-name-d" name="full_name" type="text" autocomplete="name" required>
+						</div>
+					</div>
+					<div class="sce-form__group">
+						<label class="sce-form__label" for="sce-faq-phone-d">Phone</label>
+						<div class="sce-form__field">
+							<input class="sce-form__input" id="sce-faq-phone-d" name="phone" type="tel" autocomplete="tel" required data-mask="tel">
+						</div>
+					</div>
+					<div class="sce-form__group">
+						<label class="sce-form__label" for="sce-faq-email-d">Email</label>
+						<div class="sce-form__field">
+							<input class="sce-form__input" id="sce-faq-email-d" name="email" type="email" autocomplete="email">
+						</div>
+					</div>
+					<div class="sce-form__group">
+						<label class="sce-form__label" for="sce-faq-zip-d">Zip code</label>
+						<div class="sce-form__field">
+							<input class="sce-form__input" id="sce-faq-zip-d" name="zip" type="text" autocomplete="postal-code" data-mask="zip" inputmode="numeric" pattern="\d{5}" maxlength="5">
+						</div>
+					</div>
+					<div class="sce-form__group">
+						<label class="sce-form__label" for="sce-faq-type-d">Project type</label>
+						<div class="sce-form__field">
+							<select class="sce-form__select" id="sce-faq-type-d" name="project_type">
+								<option value="" disabled selected>Select an option</option>
+								<option value="Louvered pergola">Louvered pergola</option>
+								<option value="Screen enclosure">Screen enclosure</option>
+								<option value="Pool cage">Pool cage</option>
+								<option value="Patio cover">Patio cover</option>
+								<option value="Not sure yet">Not sure yet</option>
+							</select>
+							<svg class="sce-form__chev" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+						</div>
+					</div>
+						</div>
+						<button class="sce-form__submit" type="submit">Request my free consultation</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="sce-faq__main">
+				<span class="sce-faq__eyebrow sce-rv" style="--sce-rv-d:40ms">Answers first</span>
+				<h2 class="sce-faq__title"><span class="sce-rvline" style="--sce-rv-d:110ms"><span>Everything You Want</span></span><span class="sce-rvline" style="--sce-rv-d:200ms"><span>To Know, <em>Answered.</em></span></span></h2>
+				<p class="sce-faq__intro sce-rv" style="--sce-rv-d:260ms">No jargon and no guesswork. These are the questions homeowners ask us most before an install, answered the same way we would answer them standing on your patio — real timelines, real numbers, and nothing buried in the small print. Still unclear on something? Put it in the form and we will cover it on the call.</p>
+				<span class="sce-faq__eyebrow sce-faq__eyebrow--2 sce-rv" style="--sce-rv-d:320ms">Common questions</span>
+				<div class="sce-faq__subtitle sce-rv" style="--sce-rv-d:360ms">Before you book a consultation</div>
+				<div class="sce-faq__list">
+					<div class="sce-faq__item sce-rv is-open" style="--sce-rv-d:420ms">
+						<h3 class="sce-faq__qw">
+							<button class="sce-faq__q" type="button" id="sce-faq-q-d0" aria-expanded="true" aria-controls="sce-faq-p-d0">
+								<span>How long does an installation take?</span>
+								<span class="sce-faq__icon" aria-hidden="true"></span>
+							</button>
+						</h3>
+						<div class="sce-faq__panel" id="sce-faq-p-d0" role="region" aria-labelledby="sce-faq-q-d0">
+							<div class="sce-faq__a">Most louvered pergolas are installed in one to three days once the structure arrives. Permitting and fabrication run four to six weeks before that, and we give you the real calendar up front — not a best case.</div>
+						</div>
+					</div>
+					<div class="sce-faq__item sce-rv" style="--sce-rv-d:490ms">
+						<h3 class="sce-faq__qw">
+							<button class="sce-faq__q" type="button" id="sce-faq-q-d1" aria-expanded="false" aria-controls="sce-faq-p-d1">
+								<span>Will it hold up to a Florida storm?</span>
+								<span class="sce-faq__icon" aria-hidden="true"></span>
+							</button>
+						</h3>
+						<div class="sce-faq__panel" id="sce-faq-p-d1" role="region" aria-labelledby="sce-faq-q-d1" hidden>
+							<div class="sce-faq__a">Every structure is engineered and permitted to the wind load for your address, using heavy-gauge aluminium extrusions and concealed structural fasteners. You get the stamped engineering with your package.</div>
+						</div>
+					</div>
+					<div class="sce-faq__item sce-rv" style="--sce-rv-d:560ms">
+						<h3 class="sce-faq__qw">
+							<button class="sce-faq__q" type="button" id="sce-faq-q-d2" aria-expanded="false" aria-controls="sce-faq-p-d2">
+								<span>Do you handle permits and inspections?</span>
+								<span class="sce-faq__icon" aria-hidden="true"></span>
+							</button>
+						</h3>
+						<div class="sce-faq__panel" id="sce-faq-p-d2" role="region" aria-labelledby="sce-faq-q-d2" hidden>
+							<div class="sce-faq__a">Yes. We prepare the drawings, submit to your county or municipality, and meet the inspector on site. You never have to chase a permit office.</div>
+						</div>
+					</div>
+					<div class="sce-faq__item sce-rv" style="--sce-rv-d:630ms">
+						<h3 class="sce-faq__qw">
+							<button class="sce-faq__q" type="button" id="sce-faq-q-d3" aria-expanded="false" aria-controls="sce-faq-p-d3">
+								<span>What does it cost?</span>
+								<span class="sce-faq__icon" aria-hidden="true"></span>
+							</button>
+						</h3>
+						<div class="sce-faq__panel" id="sce-faq-p-d3" role="region" aria-labelledby="sce-faq-q-d3" hidden>
+							<div class="sce-faq__a">It depends on span, mounting and options such as motorised louvers, screens or lighting. After the free consultation you get one fixed number that covers the build, the permit and the install.</div>
+						</div>
+					</div>
+					<div class="sce-faq__item sce-rv" style="--sce-rv-d:700ms">
+						<h3 class="sce-faq__qw">
+							<button class="sce-faq__q" type="button" id="sce-faq-q-d4" aria-expanded="false" aria-controls="sce-faq-p-d4">
+								<span>What maintenance does it need?</span>
+								<span class="sce-faq__icon" aria-hidden="true"></span>
+							</button>
+						</h3>
+						<div class="sce-faq__panel" id="sce-faq-p-d4" role="region" aria-labelledby="sce-faq-q-d4" hidden>
+							<div class="sce-faq__a">Rinse the louvers a few times a year. The powder-coated finish is warranted against peeling and chalking, and the drainage is built into the frame so there is nothing to clear out.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<!-- ==========================================================================
+     WIDGET 10 — Call to Action
+     ========================================================================== -->
+<section class="sce-cta sce-scope">
+	<div class="sce-cta__stage">
+		<img class="sce-cta__bg" src="https://suncoastenclosures.com/wp-content/uploads/2026/09/Section-10.-Final-Emotional-Close.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+		<div class="sce-cta__scrim"></div>
+		<div class="sce-cta__inner">
+			<h2 class="sce-cta__title"><span class="sce-rvline" style="--sce-rv-d:120ms"><span>The Best Part of Your Home</span></span><span class="sce-rvline" style="--sce-rv-d:220ms"><span>Was Never Going to Be</span></span><span class="sce-rvline" style="--sce-rv-d:320ms"><span><em>Inside.</em></span></span></h2>
+			<p class="sce-cta__sub sce-rv" style="--sce-rv-d:340ms">One conversation is all it takes. We will measure, design and price your space — and you will know exactly what it costs before anyone picks up a tool.</p>
+			<div class="sce-cta__actions sce-rv" style="--sce-rv-d:440ms">
+				<a class="sce-cta__btn" href="#quote">Get my free design consultation
+					<svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4L12.175 9Z" fill="currentColor"/></svg>
+				</a>
+			</div>
+			<span class="sce-cta__note sce-rv" style="--sce-rv-d:540ms">Free consultation · No obligation · Licensed &amp; insured</span>
+		</div>
+	</div>
+</section>
+
+<!-- ==========================================================================
+     WIDGET 11 — Footer
+     ========================================================================== -->
+<footer class="sce-footer sce-scope">
+	<div class="sce-footer__inner">
+
+		<div class="sce-footer__top">
+			<a class="sce-footer__brand sce-rv" style="--sce-rv-d:40ms" href="/">
+				<img class="sce-footer__logo" src="https://suncoastenclosures.com/wp-content/uploads/2026/09/Container-4.png" alt="Suncoast Enclosures" loading="lazy" decoding="async">
+			</a>
+
+			<a class="sce-footer__contact sce-rv" style="--sce-rv-d:110ms" href="tel:18774495106">
+				<span class="sce-footer__contact-icon" aria-hidden="true">
+					<svg viewBox="0 0 16 16" fill="none" focusable="false"><path d="M14.6 11.3v2.1a1.4 1.4 0 0 1-1.53 1.4 13.9 13.9 0 0 1-6.05-2.15 13.65 13.65 0 0 1-4.2-4.2A13.9 13.9 0 0 1 .67 2.38 1.4 1.4 0 0 1 2.06.85h2.1a1.4 1.4 0 0 1 1.4 1.2c.09.67.25 1.32.48 1.95a1.4 1.4 0 0 1-.32 1.48l-.89.89a11.2 11.2 0 0 0 4.2 4.2l.89-.89a1.4 1.4 0 0 1 1.48-.31c.63.23 1.28.39 1.95.47a1.4 1.4 0 0 1 1.2 1.42Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</span>
+				<span>
+					<span class="sce-footer__contact-label">Speak to a designer</span>
+					<span class="sce-footer__contact-value">1-877-449-5106</span>
+				</span>
+			</a>
+
+			<a class="sce-footer__cta sce-rv" style="--sce-rv-d:180ms" href="#quote">Request a quote
+				<svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4L12.175 9Z" fill="currentColor"/></svg>
+			</a>
+		</div>
+
+		<div class="sce-footer__rule" role="presentation"></div>
+
+		<div class="sce-footer__bottom">
+			<nav class="sce-footer__nav sce-rv" style="--sce-rv-d:220ms" aria-label="Footer">
+				<a class="sce-footer__link" href="#benefits">Louvered pergolas</a>
+				<a class="sce-footer__link" href="#projects">Projects</a>
+				<a class="sce-footer__link" href="#process">The process</a>
+				<a class="sce-footer__link" href="#faq">FAQ</a>
+				<a class="sce-footer__link" href="#quote">Contact</a>
+			</nav>
+			<p class="sce-footer__legal sce-rv" style="--sce-rv-d:280ms">© 2026 Suncoast Enclosures. Licensed &amp; insured. All rights reserved.</p>
+		</div>
+
+	</div>
+</footer>
+
 <main>
 	<section class="demo" style="min-height:60vh"><div class="demo-note">
 		<h2>End of prototype</h2>
@@ -657,11 +855,13 @@
 </main>
 
 <script src="assets/js/sce-header.js" defer></script>
+<script src="assets/js/sce-form.js" defer></script>
 <script src="assets/js/sce-banner.js" defer></script>
 <script src="assets/js/sce-benefits.js" defer></script>
 <script src="assets/js/sce-projects.js" defer></script>
 <script src="assets/js/sce-band.js" defer></script>
 <script src="assets/js/sce-path.js" defer></script>
+<script src="assets/js/sce-faq.js" defer></script>
 <script src="assets/js/sce-reveal.js" defer></script>
 </body>
 </html>
