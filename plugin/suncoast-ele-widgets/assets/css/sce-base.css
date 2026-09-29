@@ -218,6 +218,26 @@
 	border: 0;
 }
 
+/* Elementor saved templates used as card content. The selected template keeps
+   its own layout and styling unless the optional Suncoast form skin is on. */
+.sce-scope .sce-template {
+	width: 100%;
+	min-width: 0;
+}
+.sce-scope .sce-template > .elementor {
+	width: 100%;
+}
+.sce-scope .sce-template__notice {
+	margin: 0;
+	padding: 14px 16px;
+	border: 1px dashed currentColor;
+	border-radius: 6px;
+	font-family: var(--sce-font-ui);
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--sce-muted);
+}
+
 /* Accessible focus ring, shared by every interactive element */
 .sce-scope :is(a, button, input, select, textarea, [tabindex]):focus-visible {
 	outline: none;

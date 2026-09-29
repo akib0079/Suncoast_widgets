@@ -43,9 +43,7 @@ class SCE_Widget_Banner extends Widget_Base {
 	}
 
 	public function get_style_depends() {
-		// The Pro-form skin is enqueued from render() instead, where the
-		// settings are guaranteed to be parsed.
-		return array( 'sce-banner' );
+		return array( 'sce-banner', 'sce-form-elementor' );
 	}
 
 	public function get_script_depends() {
@@ -277,11 +275,11 @@ class SCE_Widget_Banner extends Widget_Base {
 		$this->add_control(
 			'form_source',
 			array(
-				'label'   => __( 'Form built with', 'suncoast-ele-widgets' ),
+				'label'   => __( 'Card content', 'suncoast-ele-widgets' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'builtin',
 				'options' => array(
-					'builtin'   => __( 'Built-in (stores leads + e-mails admin)', 'suncoast-ele-widgets' ),
+					'builtin'   => __( 'Built-in lead form', 'suncoast-ele-widgets' ),
 					'elementor' => __( 'Elementor saved template', 'suncoast-ele-widgets' ),
 				),
 			)
@@ -291,11 +289,34 @@ class SCE_Widget_Banner extends Widget_Base {
 			'form_template',
 			array(
 				'label'       => __( 'Template', 'suncoast-ele-widgets' ),
-				'description' => __( 'Build an Elementor Pro Form, save it as a template, then pick it here. It inherits the card styling automatically; set the admin notification under the form’s “Actions After Submit → Email”.', 'suncoast-ele-widgets' ),
+				'description' => __( 'Select any published Elementor template. Forms inside the template use their own configured submission actions.', 'suncoast-ele-widgets' ),
 				'type'        => Controls_Manager::SELECT2,
-				'options'     => $this->template_options(),
+				'options'     => SCE_Template::options(),
 				'label_block' => true,
 				'condition'   => array( 'form_source' => 'elementor' ),
+			)
+		);
+
+		$this->add_control(
+			'template_use_card_head',
+			array(
+				'label'        => __( 'Show Suncoast card heading', 'suncoast-ele-widgets' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'return_value' => 'yes',
+				'condition'    => array( 'form_source' => 'elementor' ),
+			)
+		);
+
+		$this->add_control(
+			'template_form_skin',
+			array(
+				'label'        => __( 'Apply Suncoast form styling', 'suncoast-ele-widgets' ),
+				'description'  => __( 'Enable this when the selected template contains an Elementor Pro Form. Disable it to preserve all template styling.', 'suncoast-ele-widgets' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'return_value' => 'yes',
+				'condition'    => array( 'form_source' => 'elementor' ),
 			)
 		);
 
@@ -899,7 +920,9 @@ class SCE_Widget_Banner extends Widget_Base {
 	   ==================================================================== */
 
 	protected function render() {
-		$s = $this->get_settings_for_display();
+		$s              = $this->get_settings_for_display();
+		$template_mode  = 'elementor' === $s['form_source'];
+		$show_card_copy = ! $template_mode || 'yes' === $s['template_use_card_head'];
 
 		$anchor = sanitize_title( $s['card_anchor'] ? $s['card_anchor'] : 'quote' );
 		?>
@@ -939,19 +962,19 @@ class SCE_Widget_Banner extends Widget_Base {
 
 						<div class="sce-banner__card-col" id="<?php echo esc_attr( $anchor ); ?>">
 							<div class="sce-card sce-rv" style="--sce-rv-d:300ms;--sce-rv-y:26px">
-								<?php if ( ! empty( $s['card_eyebrow'] ) ) : ?>
+								<?php if ( $show_card_copy && ! empty( $s['card_eyebrow'] ) ) : ?>
 									<span class="sce-card__eyebrow"><?php echo esc_html( $s['card_eyebrow'] ); ?></span>
 								<?php endif; ?>
-								<?php if ( ! empty( $s['card_title'] ) ) : ?>
+								<?php if ( $show_card_copy && ! empty( $s['card_title'] ) ) : ?>
 									<h2 class="sce-card__title"><?php echo esc_html( $s['card_title'] ); ?></h2>
 								<?php endif; ?>
-								<?php if ( ! empty( $s['card_sub'] ) ) : ?>
+								<?php if ( $show_card_copy && ! empty( $s['card_sub'] ) ) : ?>
 									<p class="sce-card__sub"><?php echo esc_html( $s['card_sub'] ); ?></p>
 								<?php endif; ?>
 
 								<?php $this->render_form( $s ); ?>
 
-								<?php if ( ! empty( $s['card_note'] ) ) : ?>
+								<?php if ( ! $template_mode && ! empty( $s['card_note'] ) ) : ?>
 									<p class="sce-form__note"><?php echo esc_html( $s['card_note'] ); ?></p>
 								<?php endif; ?>
 							</div>
@@ -1030,15 +1053,14 @@ class SCE_Widget_Banner extends Widget_Base {
 
 	private function render_form( $s ) {
 		if ( 'elementor' === $s['form_source'] ) {
-			wp_enqueue_style( 'sce-form-elementor' );
-			$tpl = (int) $s['form_template'];
-			if ( $tpl ) {
-				echo '<div class="sce-form sce-form--elementor">';
-				// Renders the saved template, including an Elementor Pro Form.
-				echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $tpl ); // phpcs:ignore WordPress.Security.EscapeOutput
+			$content = SCE_Template::render( $s['form_template'] );
+			if ( $content ) {
+				$skin = 'yes' === $s['template_form_skin'] ? ' sce-form sce-form--elementor' : '';
+				echo '<div class="sce-template' . esc_attr( $skin ) . '">';
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput
 				echo '</div>';
-			} elseif ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-				echo '<p class="sce-card__sub">' . esc_html__( 'Pick a saved template under Form → Template.', 'suncoast-ele-widgets' ) . '</p>';
+			} elseif ( SCE_Template::is_edit_mode() ) {
+				echo '<p class="sce-template__notice">' . esc_html__( 'Choose a published Elementor template under Card content.', 'suncoast-ele-widgets' ) . '</p>';
 			}
 			return;
 		}
@@ -1179,22 +1201,4 @@ class SCE_Widget_Banner extends Widget_Base {
 		<?php
 	}
 
-	/* --------------------------------------------------------------- utils */
-
-	private function template_options() {
-		$out   = array( '' => __( '— Select —', 'suncoast-ele-widgets' ) );
-		$posts = get_posts(
-			array(
-				'post_type'      => 'elementor_library',
-				'posts_per_page' => 100,
-				'post_status'    => 'publish',
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			)
-		);
-		foreach ( $posts as $p ) {
-			$out[ $p->ID ] = $p->post_title ? $p->post_title : '#' . $p->ID;
-		}
-		return $out;
-	}
 }

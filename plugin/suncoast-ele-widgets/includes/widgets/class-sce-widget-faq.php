@@ -44,7 +44,7 @@ class SCE_Widget_Faq extends Widget_Base {
 	}
 
 	public function get_style_depends() {
-		return array( 'sce-faq' );
+		return array( 'sce-faq', 'sce-form-elementor' );
 	}
 
 	public function get_script_depends() {
@@ -102,11 +102,11 @@ class SCE_Widget_Faq extends Widget_Base {
 		$this->add_control(
 			'form_source',
 			array(
-				'label'   => __( 'Form built with', 'suncoast-ele-widgets' ),
+				'label'   => __( 'Card content', 'suncoast-ele-widgets' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'builtin',
 				'options' => array(
-					'builtin'   => __( 'This plugin (recommended)', 'suncoast-ele-widgets' ),
+					'builtin'   => __( 'Built-in lead form', 'suncoast-ele-widgets' ),
 					'elementor' => __( 'Elementor saved template', 'suncoast-ele-widgets' ),
 				),
 			)
@@ -115,11 +115,35 @@ class SCE_Widget_Faq extends Widget_Base {
 			'form_template',
 			array(
 				'label'       => __( 'Template', 'suncoast-ele-widgets' ),
-				'type'        => Controls_Manager::SELECT,
-				'options'     => $this->template_options(),
+				'type'        => Controls_Manager::SELECT2,
+				'options'     => SCE_Template::options(),
 				'default'     => '',
+				'label_block' => true,
 				'condition'   => array( 'form_source' => 'elementor' ),
-				'description' => __( 'Any saved template. An Elementor Pro Form inside it is re-skinned to match this card, and its own Actions After Submit send the notification.', 'suncoast-ele-widgets' ),
+				'description' => __( 'Select any published Elementor template. Forms inside the template use their own configured submission actions.', 'suncoast-ele-widgets' ),
+			)
+		);
+
+		$this->add_control(
+			'template_use_card_head',
+			array(
+				'label'        => __( 'Show Suncoast card heading', 'suncoast-ele-widgets' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'return_value' => 'yes',
+				'condition'    => array( 'form_source' => 'elementor' ),
+			)
+		);
+
+		$this->add_control(
+			'template_form_skin',
+			array(
+				'label'        => __( 'Apply Suncoast form styling', 'suncoast-ele-widgets' ),
+				'description'  => __( 'Enable this when the selected template contains an Elementor Pro Form. Disable it to preserve all template styling.', 'suncoast-ele-widgets' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'return_value' => 'yes',
+				'condition'    => array( 'form_source' => 'elementor' ),
 			)
 		);
 
@@ -815,6 +839,7 @@ class SCE_Widget_Faq extends Widget_Base {
 		$tag   = in_array( $s['title_tag'], array( 'h2', 'h3', 'h4', 'div' ), true ) ? $s['title_tag'] : 'h2';
 		$id    = sanitize_html_class( (string) $s['section_id'] );
 		$right = 'right' === $s['form_position'];
+		$show_card_copy = 'elementor' !== $s['form_source'] || 'yes' === $s['template_use_card_head'];
 		?>
 		<section class="sce-faq sce-scope<?php echo $right ? ' sce-faq--form-right' : ''; ?>"
 			<?php echo $id ? ' id="' . esc_attr( $id ) . '"' : ''; ?>
@@ -824,7 +849,7 @@ class SCE_Widget_Faq extends Widget_Base {
 
 					<div class="sce-faq__aside">
 						<div class="sce-faq__card sce-rv" style="--sce-rv-d:60ms">
-							<?php $this->render_card_head( $s ); ?>
+							<?php if ( $show_card_copy ) { $this->render_card_head( $s ); } ?>
 							<?php $this->render_form( $s ); ?>
 						</div>
 					</div>
@@ -916,15 +941,14 @@ class SCE_Widget_Faq extends Widget_Base {
 
 	private function render_form( $s ) {
 		if ( 'elementor' === $s['form_source'] ) {
-			wp_enqueue_style( 'sce-form-elementor' );
-			$tpl = (int) $s['form_template'];
-			if ( $tpl ) {
-				echo '<div class="sce-form sce-form--elementor">';
-				// Renders the saved template, including an Elementor Pro Form.
-				echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $tpl ); // phpcs:ignore WordPress.Security.EscapeOutput
+			$content = SCE_Template::render( $s['form_template'] );
+			if ( $content ) {
+				$skin = 'yes' === $s['template_form_skin'] ? ' sce-form sce-form--elementor' : '';
+				echo '<div class="sce-template' . esc_attr( $skin ) . '">';
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput
 				echo '</div>';
-			} elseif ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-				echo '<p class="sce-faq__card-sub">' . esc_html__( 'Pick a saved template under Form → Template.', 'suncoast-ele-widgets' ) . '</p>';
+			} elseif ( SCE_Template::is_edit_mode() ) {
+				echo '<p class="sce-template__notice">' . esc_html__( 'Choose a published Elementor template under Card content.', 'suncoast-ele-widgets' ) . '</p>';
 			}
 			return;
 		}
@@ -1065,22 +1089,4 @@ class SCE_Widget_Faq extends Widget_Base {
 		<?php
 	}
 
-	/* --------------------------------------------------------------- utils */
-
-	private function template_options() {
-		$out   = array( '' => __( '— Select —', 'suncoast-ele-widgets' ) );
-		$posts = get_posts(
-			array(
-				'post_type'      => 'elementor_library',
-				'posts_per_page' => 100,
-				'post_status'    => 'publish',
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			)
-		);
-		foreach ( $posts as $p ) {
-			$out[ $p->ID ] = $p->post_title ? $p->post_title : '#' . $p->ID;
-		}
-		return $out;
-	}
 }

@@ -506,3 +506,9 @@ add_action( 'sce/lead_submitted', function ( $lead_id, $fields, $meta ) { /* CRM
 Validation: PHP lint, JavaScript syntax checks, selector/settings audit and ZIP integrity passed. Chromium prototype checks at 320, 375, 430, 768, 1024 and 1440px found no page overflow or hidden CTA/footer/Transform content. Mobile menu open/close and FAQ interaction passed with injected theme button states. CTA/footer remained visible with JavaScript disabled. Live WordPress/Elementor activation and physical iOS Safari testing were not performed for this release.
 
 After replacing the plugin, regenerate Elementor CSS/data and clear site/CDN/browser caches so old CSS does not mask the fixes.
+
+## 1.3.0 Elementor template content
+
+The Hero Banner and FAQ widgets can now replace their built in lead form with any published Elementor saved template. Open the widget Form panel, set Card content to Elementor saved template, then select the template. The template renders with its own Elementor CSS and configured form submission actions.
+
+Two optional controls let the template use the Suncoast card heading and apply the Suncoast form skin. Both are disabled by default so a global form or complete saved section keeps its original design. Template IDs are validated before rendering and recursive template rendering is blocked.
